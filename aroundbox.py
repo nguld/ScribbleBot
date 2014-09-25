@@ -44,3 +44,5 @@ turnRight (turnSpeed, turnTime)
 # Move until it comes close to another object
 while (getIR(left) == nothing and getIR(right) == nothing):
 	forward (highSpeed*direction, checkInterval)
+
+#Test Submit
