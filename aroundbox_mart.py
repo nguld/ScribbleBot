@@ -1,10 +1,10 @@
-direction		= 1 #Set to -1 if robot moves backward
+direction		= -1 #Set to -1 if robot moves backward
 
 highSpeed		= 1
 lowSpeed		= 0.5
 turnSpeed		= 0.5
-checkInterval		= 0.3
-moveMultiplierAfterTurn	= 5
+checkInterval		= 0.4
+moveMultiplierAfterTurn	= 6
 
 turnTime = 0
 
@@ -23,24 +23,27 @@ doAgain = 1
 lastTime = 0
 while (doAgain == 1):
 	turnRight (turnSpeed, checkInterval)
+	wait(0.5);
 	turnTime += checkInterval
 
 	if (getIR(left) == something or getIR(right) == something):
 		doAgain = 1
-	elif (lastTime = 0):
+	elif (lastTime == 0 or lastTime == 1):
 		doAgain = 1
-		lastTime = 1
-	else
+		lastTime += 1
+	else:
 		doAgain = 0
 
 # Use time to move around
 forward (lowSpeed*direction, moveMultiplierAfterTurn*turnTime)
 turnLeft (turnSpeed, turnTime)
-forward (lowSpeed*direction, 2*moveMultiplierAfterTurn*turnTime)
+forward (lowSpeed*direction, 1.5*moveMultiplierAfterTurn*turnTime)
 turnLeft (turnSpeed, turnTime)
 forward (lowSpeed*direction, moveMultiplierAfterTurn*turnTime)
 turnRight (turnSpeed, turnTime)
 
+forward (highSpeed*direction, 1);
+
 # Move until it comes close to another object
-while (getIR(left) == nothing and getIR(right) == nothing):
-	forward (highSpeed*direction, checkInterval)
+#while (getIR(left) == nothing and getIR(right) == nothing):
+#	forward (highSpeed*direction, checkInterval)
