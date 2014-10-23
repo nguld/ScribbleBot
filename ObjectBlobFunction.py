@@ -1,3 +1,6 @@
+# Parameter : input colour (defined below)
+# Return    : direction ('left', 'right', 'center')
+
 from math import *
 from myro import *
 
