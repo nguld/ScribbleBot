@@ -20,6 +20,7 @@ yellow =    makeColor(255, 255, 0)
 magenta =   makeColor(255, 0, 255)
 cyan =      makeColor( 0, 255, 255)
 purple =    makeColor(127, 0, 255)
+orange =     makeColor(225,100, 0)
 ###################################################
 
 
@@ -35,39 +36,51 @@ purple =    makeColor(127, 0, 255)
 #
 ###################################################
 
-#pic = takePicture() #Uncomment this for robot
+def determineDirection (colour):
 
-pic = makePicture("/Users/Karel/Desktop/stripes.jpg") #jpg or gif only
+    #pic = takePicture() #Uncomment this for robot
 
-#
-colourTollerance = 150
-colour = pink
-
-red, green, blue = getRGB(colour);
-
-h = getHeight(pic)
-w = getWidth(pic)
-
-# Variable for image analysis
-leftSideTotal = 0
-rightSideTotal = 0
-centerTotal = 0
+    pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
 
 
+    colourTollerance = 75
+    colour = black
 
-for i in range(1, w):
-    for j in range(1, h):
-        pixel = getPixel(pic, i, j)
-        r, g, b = getRGB(pixel)
-        if (abs(r - red) < colourTollerance) and (abs(g - green) < colourTollerance) and (abs(b - blue) < colourTollerance):
-            setRGB(pixel, (255,255,255))
-            if (i < w/3):
-                leftSideTotal += 1
-            elif (i > w/3):
-                rightSideTotal += 1
+    red, green, blue = getRGB(colour);
+
+    h = getHeight(pic)
+    w = getWidth(pic)
+
+    # Variable for image analysis
+    leftSideTotal = 0
+    rightSideTotal = 0
+    centerTotal = 0
+
+
+
+    for i in range(1, w):
+        for j in range(1, h):
+            pixel = getPixel(pic, i, j)
+            r, g, b = getRGB(pixel)
+            if (abs(r - red) < colourTollerance) and (abs(g - green) < colourTollerance) and (abs(b - blue) < colourTollerance):
+                setRGB(pixel, (255,255,255))
+                if (i < w/3):
+                    leftSideTotal += 1
+                elif (i > w/3):
+                    rightSideTotal += 1
+                else:
+                    centerTotal += 1
             else:
-                centerTotal += 1
-        else:
-            setRGB(pixel, (0,0,0))
-        setPixel(pic, i, j, pixel)
-show(pic)
+                setRGB(pixel, (0,0,0))
+            setPixel(pic, i, j, pixel)
+    show(pic)
+
+    #determine direction
+    if (leftSideTotal > centerTotal and leftSideTotal > rightSideTotal):
+        direction = 'left'
+    elif (rightSideTotal > centerTotal and rightSideTotal > leftSideTotal):
+        direction = 'right'
+    else:
+        direction = 'center'
+
+    return direction
