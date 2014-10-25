@@ -1,12 +1,6 @@
-# Parameter : input colour (defined below)
-# Return    : direction ('left', 'right', 'center')
-
 from math import *
 from myro import *
 
-###################################################
-#                 Define Colours                  #
-###################################################
 black =     makeColor( 0, 0, 0)
 white =     makeColor(255, 255, 255)
 blue =      makeColor( 0, 0, 255)
@@ -23,33 +17,22 @@ yellow =    makeColor(255, 255, 0)
 magenta =   makeColor(255, 0, 255)
 cyan =      makeColor( 0, 255, 255)
 purple =    makeColor(127, 0, 255)
-orange =     makeColor(225,100, 0)
-###################################################
+orange =    makeColor(225,100, 0)
 
 
+while 1:
+    colour = input("Enter Colour: ")
+    #colour = blue
 
-###################################################
-#                Image Processing                 #
-###################################################
-#
-# 1) Change pixel colour based on colour tollerance
-#
-# 2) Determines what side of the picture the
-#    majority of the pixels are on
-#
-###################################################
+    #pic = takePicture() #Uncomment this for robot
 
-def determineDirection (colour):
+    pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
 
-    pic = takePicture() #Uncomment this for robot
+    show(pic)
 
-    #pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
+    colourTollerance = 100
 
-
-    colourTollerance = 75
-    colour = black
-
-    red, green, blue = getRGB(colour);
+    RGBred, RGBgreen, RGBblue = getRGB(colour);
 
     h = getHeight(pic)
     w = getWidth(pic)
@@ -65,7 +48,7 @@ def determineDirection (colour):
         for j in range(1, h):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
-            if (abs(r - red) < colourTollerance) and (abs(g - green) < colourTollerance) and (abs(b - blue) < colourTollerance):
+            if (abs(r - RGBred) < colourTollerance) and (abs(g - RGBgreen) < colourTollerance) and (abs(b - RGBblue) < colourTollerance):
                 setRGB(pixel, (255,255,255))
                 if (i < w/3):
                     leftSideTotal += 1
@@ -83,13 +66,13 @@ def determineDirection (colour):
 
     #determine direction
     if (abs(leftSideTotal - centerTotal) < errorTollerance and abs(leftSideTotal - rightSideTotal) < errorTollerance and abs(rightSideTotal - centerTotal) < errorTollerance):
-        return "NONE"
+        direction = "NONE"
 
     if (leftSideTotal > centerTotal and leftSideTotal > rightSideTotal):
-        return "LEFT"
+        direction = "LEFT"
     elif (rightSideTotal > centerTotal and rightSideTotal > leftSideTotal):
-        return "RIGHT"
+        direction = "RIGHT"
     else:
-        return "CENTER"
+        direction = "CENTER"
 
-print determineDirection(blue)
+    print direction
