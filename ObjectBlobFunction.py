@@ -46,10 +46,11 @@ def determineDirection (colour):
     #pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
 
 
-    colourTollerance = 75
-    colour = black
 
-    red, green, blue = getRGB(colour);
+    colourTollerance = 70
+
+    RGBred, RGBgreen, RGBblue = getRGB(colour);
+    #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
 
     h = getHeight(pic)
     w = getWidth(pic)
@@ -65,11 +66,12 @@ def determineDirection (colour):
         for j in range(1, h):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
-            if (abs(r - red) < colourTollerance) and (abs(g - green) < colourTollerance) and (abs(b - blue) < colourTollerance):
+            if (abs(r - RGBred) < colourTollerance) and (abs(g - RGBgreen) < colourTollerance) and (abs(b - RGBblue) < colourTollerance):
                 setRGB(pixel, (255,255,255))
+
                 if (i < w/3):
                     leftSideTotal += 1
-                elif (i > w/3):
+                elif (i > w - (w/3)):
                     rightSideTotal += 1
                 else:
                     centerTotal += 1

@@ -3,9 +3,9 @@ from myro import *
 
 black =     makeColor( 0, 0, 0)
 white =     makeColor(255, 255, 255)
-blue =      makeColor( 0, 0, 255)
+blue =      makeColor( 20, 50, 255) ## Broken
 darkBlue =  makeColor( 0, 0, 100)
-pink =      makeColor(255, 175, 175)
+pink =      makeColor(255, 60, 100)
 red =       makeColor(255, 0, 0)
 darkRed =   makeColor(100, 0, 0)
 green =     makeColor( 0, 255, 0)
@@ -26,13 +26,14 @@ while 1:
 
     #pic = takePicture() #Uncomment this for robot
 
-    pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
-
+#    pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
+    pic = makePicture("/Users/Karel/ScribbleBot/stripes.gif")
     show(pic)
 
-    colourTollerance = 100
+    colourTollerance = 70
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
+    print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
 
     h = getHeight(pic)
     w = getWidth(pic)
@@ -50,9 +51,10 @@ while 1:
             r, g, b = getRGB(pixel)
             if (abs(r - RGBred) < colourTollerance) and (abs(g - RGBgreen) < colourTollerance) and (abs(b - RGBblue) < colourTollerance):
                 setRGB(pixel, (255,255,255))
+
                 if (i < w/3):
                     leftSideTotal += 1
-                elif (i > w/3):
+                elif (i > w - (w/3)):
                     rightSideTotal += 1
                 else:
                     centerTotal += 1
@@ -75,4 +77,4 @@ while 1:
     else:
         direction = "CENTER"
 
-    print direction
+    print "|" , leftSideTotal , "|" , centerTotal , "|" , rightSideTotal , "| " , direction
