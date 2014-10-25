@@ -1,5 +1,5 @@
 # Parameter : input colour (defined below)
-# Return    : direction ('left', 'right', 'center')
+# Return    : direction ('LEFT', 'RIGHT', 'CENTER')
 
 from math import *
 from myro import *
@@ -73,7 +73,7 @@ def determineDirection (colour):
             #if (distanceFrom < 120):
             #################################################################
 
-                setRGB(pixel, (255,255,255))
+                #setRGB(pixel, (255,255,255))
 
                 if (i < w/3):
                     leftSideTotal += 1
@@ -83,9 +83,8 @@ def determineDirection (colour):
                     centerTotal += 1
             else:
                 setRGB(pixel, (0,0,0))
-            setPixel(pic, i, j, pixel)
 
-    show(pic)
+            #setPixel(pic, i, j, pixel)
 
     errorTollerance = 10
 
@@ -99,5 +98,3 @@ def determineDirection (colour):
         return "RIGHT"
     else:
         return "CENTER"
-
-print determineDirection(blue)

@@ -18,7 +18,7 @@ yellow =    makeColor(255, 255, 0)
 magenta =   makeColor(255, 0, 255)
 cyan =      makeColor( 0, 255, 255)
 purple =    makeColor(127, 0, 255)
-orange =     makeColor(225,100, 0)
+orange =    makeColor(225,100, 0)
 
 
 while True:
@@ -26,10 +26,10 @@ while True:
     direction = determineDirection(red)
 
     if (direction == "NONE"):
-        turnRight(1,1)
+        turnRight(.3,.3)
     elif (direction == "LEFT"):
-        turnLeft(1,1)
+        turnLeft(.3,.3)
     elif (direction == "RIGHT"):
-        turnRight(1,1)
+        turnRight(.3,.3)
     elif (direction == "CENTER"):
         forward(1,1)
