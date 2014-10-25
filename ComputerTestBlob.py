@@ -3,7 +3,7 @@ from myro import *
 
 black =     makeColor( 0, 0, 0)
 white =     makeColor(255, 255, 255)
-blue =      makeColor( 20, 50, 255) ## Broken
+blue =      makeColor( 0, 50, 220) ## Broken
 darkBlue =  makeColor( 0, 0, 100)
 pink =      makeColor(255, 60, 100)
 red =       makeColor(255, 0, 0)
@@ -33,7 +33,7 @@ while 1:
     colourTollerance = 70
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
-    print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
+    #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
 
     h = getHeight(pic)
     w = getWidth(pic)
@@ -49,7 +49,17 @@ while 1:
         for j in range(1, h):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
-            if (abs(r - RGBred) < colourTollerance) and (abs(g - RGBgreen) < colourTollerance) and (abs(b - RGBblue) < colourTollerance):
+
+            # FORMULA 1
+            distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
+            if (distanceFrom < 100):
+            #################################################################
+
+            #FORMULA 2
+            #distanceFrom = abs(r-RGBred) + abs(g-RGBgreen) + abs(b-RGBblue)
+            #if (distanceFrom < 120):
+            #################################################################
+
                 setRGB(pixel, (255,255,255))
 
                 if (i < w/3):
@@ -64,7 +74,7 @@ while 1:
 
     show(pic)
 
-    errorTollerance = 10
+    errorTollerance = 30
 
     #determine direction
     if (abs(leftSideTotal - centerTotal) < errorTollerance and abs(leftSideTotal - rightSideTotal) < errorTollerance and abs(rightSideTotal - centerTotal) < errorTollerance):
