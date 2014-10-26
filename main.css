@@ -1,6 +1,13 @@
 body
 {
   background-image: url('background.jpg');
+  color: white;
+  font-size: 30px;
+}
+
+div
+{
+  text-align:center;
 }
 
 input {
@@ -9,4 +16,5 @@ color: red;
 border: none;
 height: 25px;
 font-size: 25px;
+opacity:0;
 }
