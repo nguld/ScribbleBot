@@ -5,8 +5,6 @@ import thread
 
 queue = Queue()
 
-threads = []
-
 class updateQueueThread (threading.Thread):
     def __init__(self, threadID, name):
         threading.Thread.__init__(self)
@@ -33,12 +31,14 @@ def updateQueue():
         data = urllib2.urlopen("http://www.noahguld.com/scribblerBot/output/commands.txt")
 
         for line in data:
-            if line == "stop()":
-                #thread2.stop()
+            if line == "stop()\n":
                 print "FUCKING STOP"
-            queue.put(line)
+                runQueue.stop()
+            else:
+                queue.put(line)
+            urllib2.urlopen("http://www.noahguld.com/scribblerBot/clearline.php")
 
-        urllib2.urlopen("http://www.noahguld.com/scribblerBot/clear.php")
+        #urllib2.urlopen("http://www.noahguld.com/scribblerBot/clear.php")
 
 def runQueue():
     while True:
