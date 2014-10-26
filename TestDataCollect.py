@@ -1,3 +1,4 @@
+from FindObject import *
 import urllib2
 from Queue import *
 import threading

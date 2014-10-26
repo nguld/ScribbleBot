@@ -25,7 +25,7 @@ colourKey = {'black': makeColor( 0, 0, 0),
             'blue': makeColor( 0, 0, 255),
             'dark blue': makeColor( 0, 0, 100),
             'pink': makeColor(255, 175, 175),
-            'kred': makeColor(255, 0, 0),
+            'red': makeColor(255, 0, 0),
             'dark red': makeColor(100, 0, 0),
             'grey': makeColor(128, 128, 128),
             'dark grey': makeColor( 64, 64, 64),
@@ -38,13 +38,13 @@ colourKey = {'black': makeColor( 0, 0, 0),
 
 setIRPower = 130
 
-def findKColour(key):
+def findColour(key):
 
     colour = colourKey[key]
 
     direction = determineDirection(colour)
 
-    while getObstacle("Center") <= 1100 and not direction == "NONE":
+    while True:#getObstacle("Center") <= 1100 and direction != "NONE":
 
         direction = determineDirection(colour)
 
