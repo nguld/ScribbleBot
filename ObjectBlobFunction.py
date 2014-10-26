@@ -23,7 +23,7 @@ yellow =    makeColor(255, 255, 0)
 magenta =   makeColor(255, 0, 255)
 cyan =      makeColor( 0, 255, 255)
 purple =    makeColor(127, 0, 255)
-orange =     makeColor(225,100, 0)
+orange =    makeColor(225,100, 0)
 ###################################################
 
 

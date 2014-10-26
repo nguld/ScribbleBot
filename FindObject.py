@@ -1,3 +1,4 @@
+from myro import *
 from ObjectBlobFunction import determineDirection
 
 #init("/dev/tty.IPRE6-193914-DevB")
@@ -22,10 +23,12 @@ orange =    makeColor(225,100, 0)
 
 setIRPower = 130
 
-def findColour(colour)
+def findColour(colour):
 
-    while getObstacle("Center") <= 1100:
-        
+    direction = determineDirection(colour)
+
+    while getObstacle("Center") <= 1100 and not direction == "NONE":
+
         direction = determineDirection(colour)
 
         if (direction == "NONE"):
