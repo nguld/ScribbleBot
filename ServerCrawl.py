@@ -35,7 +35,7 @@ def updateQueue():
 
         for line in data:
             print line
-            if line == "stop("")\n":
+            if line == "stop()\n":
                 print "STOP"
                 #runQueue.stop()
                 clearQueue = 1;
@@ -46,8 +46,6 @@ def updateQueue():
             else:
                 queue.put(line)
             urllib2.urlopen("http://www.noahguld.com/scribblerBot/clearline.php")
-
-        #urllib2.urlopen("http://www.noahguld.com/scribblerBot/clear.php")
 
 def runQueue():
     while True:
