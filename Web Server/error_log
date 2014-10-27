@@ -1,0 +1,5 @@
+[25-Oct-2014 19:46:04] PHP Parse error:  syntax error, unexpected '[', expecting ')' in /home4/noahguld/public_html/scribblerBot/parse.php on line 32
+[25-Oct-2014 19:48:36] PHP Parse error:  syntax error, unexpected '{' in /home4/noahguld/public_html/scribblerBot/parse.php on line 32
+[25-Oct-2014 19:51:06] PHP Parse error:  syntax error, unexpected '{' in /home4/noahguld/public_html/scribblerBot/parse.php on line 32
+[27-Oct-2014 17:43:03] PHP Warning:  Invalid argument supplied for foreach() in /home4/noahguld/public_html/scribblerBot/parse.php on line 68
+[27-Oct-2014 17:43:03] PHP Warning:  implode() [<a href='function.implode'>function.implode</a>]: Invalid arguments passed in /home4/noahguld/public_html/scribblerBot/parse.php on line 73

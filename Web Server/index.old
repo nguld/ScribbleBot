@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml">    
+	<head>      
+		<title>Scribbler Bot</title>
+		 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="scripts.js"></script>
+	</head>    
+	<body> 
+		<h1>Scribbler Bot Project (Group 16)</h1>
+		<input type="text" />
+	</body>  
+</html> 
