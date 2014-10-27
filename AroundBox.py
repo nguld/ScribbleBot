@@ -1,7 +1,7 @@
 import time
 import sys
 
-IRPower = 127
+IRPower = 128
 highSpeed = 1
 lowSpeed = 0.5
 waitTime = 0.3
@@ -148,6 +148,14 @@ def moveForwardCarefully(speed, time, errorOnObstacle):
 
 	return elapsedTime
 
+# Returns average obstacle sensor values
+def getObstacleAverage():
+	#getObstacle1 = getObstacle('center')
+	#wait(waitTime)
+	#getObstacle2 = getObstacle('center')
+	#return (getObstacle2 + getObstacle1)/2
+	return getObstacle('center')
+
 # Checks for the angle of the box, and returns how much it rotated to be perpendicular to the box
 def checkAngle():
 	totalTimesTurningRight = 0
@@ -155,11 +163,11 @@ def checkAngle():
 
 	# Try turning right
 	while True:
-		curProximity = getObstacle('center')
+		curProximity = getObstacleAverage()
 		turnRight(lowSpeed, angleCorrectionTurnTime)
 		totalTimesTurningRight += 1
 		wait(waitTime)
-		newProximity = getObstacle('center')
+		newProximity = getObstacleAverage()
 
 		printInfo("Before: " + str(curProximity) + " & After: " + str(newProximity))
 
@@ -174,11 +182,11 @@ def checkAngle():
 			break;
 	# Try turning left
 	while True:
-		curProximity = getObstacle('center')
+		curProximity = getObstacleAverage()
 		turnLeft(lowSpeed, angleCorrectionTurnTime)
 		totalTimesTurningLeft += 1
 		wait(waitTime)
-		newProximity = getObstacle('center')
+		newProximity = getObstacleAverage()
 
 		printInfo("Before: " + str(curProximity) + " & After: " + str(newProximity))
 
@@ -194,104 +202,110 @@ def checkAngle():
 
 	return totalTimesTurningRight - totalTimesTurningLeft
 
-setIRPower(IRPower)
+def aroundBox(supportAngle = False):
 
-# Move until it sees obstacle
-printKeyStep("Moving...")
-move(highSpeed, 0)
-while (seesObstacle("low") == False):
-	pass
-stop()
-wait(waitTime)
-printKeyStep("Object spotted")
+    setIRPower(IRPower)
+    	
+    # Move until it sees obstacle
+    printKeyStep("Moving...")
+    move(highSpeed, 0)
+    while (seesObstacle("low") == False):
+    	pass
+    stop()
+    wait(waitTime)
+    printKeyStep("Object spotted")
+    
+    if supportAngle:
+        # Account for initial box angle
+        angleCorrectionTime = checkAngle()
+        print "Time until perpendicular: ", angleCorrectionTime
+    
+    # Calculate rotating time until it does not see object
+    printKeyStep("Turning right to get to edge of box")
+    timeUntilNoObject = rightTurnRight("slow")
+    if (timeUntilNoObject == True or timeUntilNoObject == False): timeUntilNoObject = "NO OBJECT IN FIRST PLACE"
+    print "Time until no object: ", timeUntilNoObject
+    
+    # Calculate approximate time to move and do it
+    angle = (timeUntilNoObject / (0.4 * 3)) * math.radians(90) # Assume radians
+    horizontalBoxClearTime = distanceFromBox * math.tan(angle)
+    # Sanity checks
+    if horizontalBoxClearTime < 0.8: horizontalBoxClearTime = 0.8
+    if horizontalBoxClearTime > 4: horizontalBoxClearTime = 4
+    print "Calculated horizontal clearance time: ", horizontalBoxClearTime
+    moveForward(highSpeed, horizontalBoxClearTime)
+    wait(waitTime)
+    
+    # Turn left again and repeat if it still sees object
+    printKeyStep("Turning left to get to side of box")
+    stillSeesObject = rightTurnLeft("fast")
+    # Rotate a little to the left and see if there is still nothing
+    if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
+    while (stillSeesObject == True):
+    	if (stillSeesObject): print "Still sees object after left turn, trying again"
+    	wait(waitTime)
+    	rightTurnRight("fast")
+    	moveForward(highSpeed, trialAndErrorMoveIncrements)
+    	wait(waitTime)
+    	horizontalBoxClearTime += trialAndErrorMoveIncrements
+    	stillSeesObject = rightTurnLeft("fast")
+    	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
+    	print "Recalculated horizontal clearance time: ", horizontalBoxClearTime
+    
+    # As an estimate, assume verticalBoxClearTime = horizontalBoxClearTime/2
+    horizontalBoxClearTime -= 0.3 # It's usually a bit long
+    verticalBoxClearTime = horizontalBoxClearTime/2
+    if (verticalBoxClearTime < 2): verticalBoxClearTime = 2
+    
+    while (horizontalBoxClearTime > 0.1): #horizantalBoxClearTime is decreased as the box returns to its starting line
+    	# Move until it is back where it started
+    	printKeyStep("Moving along side of box")
+    	moveForwardCarefully(highSpeed, verticalBoxClearTime, True)
+    	wait(waitTime)
+    	
+    	# Turn left again and repeat if it still sees object
+    	printKeyStep("Turning left to get to back of box")
+    	stillSeesObject = rightTurnLeft("fast")
+    	# Rotate a little to the left and see if there is still nothing
+    	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
+    	while (stillSeesObject == True):
+    		if (stillSeesObject): print "Still sees object after left turn (trying to get to back of box), trying again"
+    		wait(waitTime)
+    		rightTurnRight("fast")
+    		moveForward(highSpeed, trialAndErrorMoveIncrements)
+    		wait(waitTime)
+    		verticalBoxClearTime += trialAndErrorMoveIncrements
+    		stillSeesObject = rightTurnLeft("fast")
+    		if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
+    	print "Calculated vertical clearance time: ", verticalBoxClearTime
+    	
+    	# Move back to start line
+    	printKeyStep("Moving back to starting line")
+    	travelTime = moveForwardCarefully(highSpeed, horizontalBoxClearTime, False)
+    
+    	# Subtract time already traveled
+    	horizontalBoxClearTime -= travelTime
+    	print "Horizontal displacement left to go:", horizontalBoxClearTime
+    	if (horizontalBoxClearTime > 0.1):
+    		print "Couldn't get to starting line. Moving further and trying again."
+    	else:
+    		printKeyStep("Back at starting line!")
+    	verticalBoxClearTime = trialAndErrorMoveIncrements
+    	
+    	rightTurnRight("fast")
 
-# Account for initial box angle
-# angleCorrectionTime = checkAngle()
-# print "Time until perpendicular: ", angleCorrectionTime
+    if supportAngle:
+        # Undo angle correction
+        if (angleCorrectionTime > 0):
+        	for i in range(0, angleCorrectionTime):
+        		turnLeft(lowSpeed, angleCorrectionTurnTime)
+        		wait(waitTime)
+        elif (angleCorrectionTime < 0):
+        	angleCorrectionTime *= -1
+        	for i in range(0, angleCorrectionTime):
+        		turnRight(lowSpeed, angleCorrectionTurnTime)
+        		wait(waitTime)
+    
+    moveForwardCarefully(highSpeed, 2, False)
 
-# Calculate rotating time until it does not see object
-printKeyStep("Turning right to get to edge of box")
-timeUntilNoObject = rightTurnRight("slow")
-if (timeUntilNoObject == True or timeUntilNoObject == False): timeUntilNoObject = "NO OBJECT IN FIRST PLACE"
-print "Time until no object: ", timeUntilNoObject
-
-# Calculate approximate time to move and do it
-angle = (timeUntilNoObject / (0.4 * 3)) * math.radians(90) # Assume radians
-horizontalBoxClearTime = distanceFromBox * math.tan(angle)
-# Sanity checks
-if horizontalBoxClearTime < 0.8: horizontalBoxClearTime = 0.8
-if horizontalBoxClearTime > 4: horizontalBoxClearTime = 4
-print "Calculated horizontal clearance time: ", horizontalBoxClearTime
-moveForward(highSpeed, horizontalBoxClearTime)
-wait(waitTime)
-
-# Turn left again and repeat if it still sees object
-printKeyStep("Turning left to get to side of box")
-stillSeesObject = rightTurnLeft("fast")
-# Rotate a little to the left and see if there is still nothing
-if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
-while (stillSeesObject == True):
-	if (stillSeesObject): print "Still sees object after left turn, trying again"
-	wait(waitTime)
-	rightTurnRight("fast")
-	moveForward(highSpeed, trialAndErrorMoveIncrements)
-	wait(waitTime)
-	horizontalBoxClearTime += trialAndErrorMoveIncrements
-	stillSeesObject = rightTurnLeft("fast")
-	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
-	print "Recalculated horizontal clearance time: ", horizontalBoxClearTime
-
-# As an estimate, assume verticalBoxClearTime = horizontalBoxClearTime/2
-horizontalBoxClearTime -= 0.3 # It's usually a bit long
-verticalBoxClearTime = horizontalBoxClearTime/2
-if (verticalBoxClearTime < 2): verticalBoxClearTime = 2
-
-while (horizontalBoxClearTime > 0.1): #horizantalBoxClearTime is decreased as the box returns to its starting line
-	# Move until it is back where it started
-	printKeyStep("Moving along side of box")
-	moveForwardCarefully(highSpeed, verticalBoxClearTime, True)
-	wait(waitTime)
-	
-	# Turn left again and repeat if it still sees object
-	printKeyStep("Turning left to get to back of box")
-	stillSeesObject = rightTurnLeft("fast")
-	# Rotate a little to the left and see if there is still nothing
-	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
-	while (stillSeesObject == True):
-		if (stillSeesObject): print "Still sees object after left turn (trying to get to back of box), trying again"
-		wait(waitTime)
-		rightTurnRight("fast")
-		moveForward(highSpeed, trialAndErrorMoveIncrements)
-		wait(waitTime)
-		verticalBoxClearTime += trialAndErrorMoveIncrements
-		stillSeesObject = rightTurnLeft("fast")
-		if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
-	print "Calculated vertical clearance time: ", verticalBoxClearTime
-	
-	# Move back to start line
-	printKeyStep("Moving back to starting line")
-	travelTime = moveForwardCarefully(highSpeed, horizontalBoxClearTime, False)
-
-	# Subtract time already traveled
-	horizontalBoxClearTime -= travelTime
-	print "Horizontal displacement left to go:", horizontalBoxClearTime
-	if (horizontalBoxClearTime > 0.1):
-		print "Couldn't get to starting line. Moving further and trying again."
-	else:
-		printKeyStep("Back at starting line!")
-	verticalBoxClearTime = trialAndErrorMoveIncrements
-	
-	rightTurnRight("fast")
-
-# Undo angle correction
-# if (angleCorrectionTime > 0):
-# 	for i in range(0, angleCorrectionTime):
-# 		turnLeft(lowSpeed, angleCorrectionTurnTime)
-# 		wait(waitTime)
-# elif (angleCorrectionTime < 0):
-# 	angleCorrectionTime *= -1
-# 	for i in range(0, angleCorrectionTime):
-# 		turnRight(lowSpeed, angleCorrectionTurnTime)
-# 		wait(waitTime)
-
-moveForwardCarefully(highSpeed, 2, False)
+    return "Mission accomplished"

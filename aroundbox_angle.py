@@ -13,8 +13,6 @@ distanceFromBox = 0.5
 # Time, in seconds, to move if it still sees object after turning
 trialAndErrorMoveIncrements = 0.8
 
-setIRPower(IRPower)
-
 class color:
 	PURPLE		= '\033[95m'
 	CYAN		= '\033[96m'
@@ -203,6 +201,8 @@ def checkAngle():
 			break;
 
 	return totalTimesTurningRight - totalTimesTurningLeft
+
+setIRPower(IRPower)
 	
 # Move until it sees obstacle
 printKeyStep("Moving...")
