@@ -15,6 +15,8 @@ class updateQueueThread (threading.Thread):
         print "Starting " + self.name
         updateQueue()
         print "Exiting " + self.name
+    def stop(self):
+        self._Thread__stop()
 
 class runQueueThread (threading.Thread):
     def __init__(self, threadID, name):
@@ -25,6 +27,8 @@ class runQueueThread (threading.Thread):
         print "Starting " + self.name
         runQueue()
         print "Exiting " + self.name
+    def stop(self):
+        self._Thread__stop()
 
 clearQueue = 0;
 
@@ -34,15 +38,12 @@ def updateQueue():
         data = urllib2.urlopen("http://www.noahguld.com/scribblerBot/output/commands.txt")
 
         for line in data:
-            print line
+            #print line
             if line == "stop("")\n":
-                print "STOP"
-                #runQueue.stop()
                 clearQueue = 1;
                 while queue.empty() == False:
                     queue.get()
                 clearQueue = 0;
-                #runQueue.start()
             else:
                 queue.put(line)
             urllib2.urlopen("http://www.noahguld.com/scribblerBot/clearline.php")
