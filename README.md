@@ -3,5 +3,8 @@ ScribbleBot
 
 Use:
 
-ObjectBlobFunction.py contains the blob function and the colours (must copy these into your main code that calls using colour)
-TestRun.py is an example of how to use the function
+1) Open and run myro
+2) Connect to the scribbler
+3) Run command 'execfile("ServerCrawl.py")'
+4) Input commands at noahguld.com/scribblerBot
+5) Magic
