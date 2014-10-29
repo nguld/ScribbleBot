@@ -27,10 +27,7 @@ class runQueueThread (threading.Thread):
         print "Starting " + self.name
         runQueue()
         print "Exiting " + self.name
-    def stop(self):
 
-
-clearQueue = 0;
 
 def updateQueue():
     while True:
@@ -40,12 +37,12 @@ def updateQueue():
         for line in data:
             #print line
             if line == "stop()\n":
-                #print "STOP"
+                print "STOP"
                 #runQueue.stop()
-                clearQueue = 1;
-                while queue.empty() == False:
-                    queue.get()
-                clearQueue = 0;
+                #clearQueue = 1;
+                #while queue.empty() == False:
+                #    queue.get()
+                #clearQueue = 0;
                 #runQueue.start()
             else:
                 queue.put(line)
@@ -55,8 +52,8 @@ def runQueue():
     while True:
         #print "Run Queue"
         while queue.empty() == False:
-            if clearQueue != 1:
-                exec queue.get()
+            #if clearQueue != 1:
+            exec queue.get()
 
 
 
