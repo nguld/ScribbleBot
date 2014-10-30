@@ -1,8 +1,9 @@
 import time
 import sys
 
-IRPower = 127
-highSpeed = 1
+IRPower1 = 126
+IRPower2 = 126
+highSpeed = 0.8
 lowSpeed = 0.5
 waitTime = 0.3
 angleCorrectionTurnTime = 0.1
@@ -11,7 +12,7 @@ angleCorrectionTurnTime = 0.1
 #distanceFromBox = 4
 distanceFromBox = 0.5
 # Time, in seconds, to move if it still sees object after turning
-trialAndErrorMoveIncrements = 0.8
+trialAndErrorMoveIncrements = 0.6
 
 class color:
 	PURPLE		= '\033[95m'
@@ -51,7 +52,7 @@ def printError(text):
 # If it sees an object, it turns 90 degrees right and returns time until it no longer saw object
 # Otherwise it turns 90 degrees and returns whether it now sees an obstacle
 # Accepts either speed slow (accurate timeUntilNoObject) or fast
-def rightTurnRight(speed):
+def rightTurnRight(speed, turns = 0):
 	if (speed == "slow"):
 		# NOTE Calculating horizontalClearanceTime relies on these value
 		rightTurnTime = 0.205
@@ -59,6 +60,8 @@ def rightTurnRight(speed):
 	else:
 		rightTurnTime = 0.4
 		rightTurnRepeat = 3
+
+	if (turns != 0): rightTurnRepeat = turns
 	
 	if (seesObstacle("high") == True):
 		timeUntilNoObject = rightTurnTime
@@ -73,22 +76,31 @@ def rightTurnRight(speed):
 
 		return timeUntilNoObject
 	else:
+		# Return turns until it sees no object
+		j = 1
 		for i in range(rightTurnRepeat):
 			turnRight(lowSpeed, rightTurnTime)
 			wait(waitTime)
-
-		return seesObstacle("high")
+			if seesObstacle("high"):
+				#if (j == 3): return 3
+				return j
+				break
+			j += 1
+		
+		return 0
 
 # If it sees an object, it turns 90 degrees left and returns time until it no longer saw object
 # Otherwise it turns 90 degrees left and returns whether it now sees an obstacle
 # Accepts either speed slow (accurate timeUntilNoObject) or fast
-def rightTurnLeft(speed):
+def rightTurnLeft(speed, turns = 0):
 	if (speed == "slow"):
 		rightTurnTime = 0.205
 		rightTurnRepeat = 6
 	else:
 		rightTurnTime = 0.4
 		rightTurnRepeat = 3
+
+	if (turns != 0): rightTurnRepeat = turns
 
 	if (seesObstacle("high") == True):
 		timeUntilNoObject = rightTurnTime
@@ -101,21 +113,39 @@ def rightTurnLeft(speed):
 
 		return timeUntilNoObject
 	else:
+		# Return turns until it sees no object
+		j = 1
 		for i in range(rightTurnRepeat):
 			turnLeft(lowSpeed, rightTurnTime)
 			wait(waitTime)
-
-		return seesObstacle("high")
+			if seesObstacle("high"):
+				#if (j == 3): return 3
+				return j
+				break
+			j += 1
+		
+		return 0
 
 # Turns left a little, checks to see if there is an obstacle, and turns back (returning presence of obstacle)
 def clearanceCheckLeft():
-	turnTime = 0.4
+	turnTime = 0.205
 	obstacleDetected = False
 
 	turnLeft(lowSpeed, turnTime)
 	wait(waitTime)
 
-	obstacleDetected = seesObstacle("high")
+	if seesObstacle("high"):
+		obstacleDetected = True
+
+	if (obstacleDetected == False):
+		turnLeft(lowSpeed, turnTime)
+		wait(waitTime)
+	
+		if seesObstacle("high"):
+			obstacleDetected = True
+	
+		turnRight(lowSpeed, turnTime)
+		wait(waitTime)
 
 	turnRight(lowSpeed, turnTime)
 	wait(waitTime)
@@ -194,7 +224,7 @@ def checkAngle():
 
 	return totalTimesTurningRight - totalTimesTurningLeft
 
-setIRPower(IRPower)
+setIRPower(IRPower1)
 
 # Move until it sees obstacle
 printKeyStep("Moving...")
@@ -204,6 +234,8 @@ while (seesObstacle("low") == False):
 stop()
 wait(waitTime)
 printKeyStep("Object spotted")
+
+setIRPower(IRPower2)
 
 # Account for initial box angle
 # angleCorrectionTime = checkAngle()
@@ -218,8 +250,9 @@ print "Time until no object: ", timeUntilNoObject
 # Calculate approximate time to move and do it
 angle = (timeUntilNoObject / (0.4 * 3)) * math.radians(90) # Assume radians
 horizontalBoxClearTime = distanceFromBox * math.tan(angle)
+#horizontalBoxClearTime = trialAndErrorMoveIncrements
 # Sanity checks
-if horizontalBoxClearTime < 0.8: horizontalBoxClearTime = 0.8
+if horizontalBoxClearTime < 0.6: horizontalBoxClearTime = 0.6
 if horizontalBoxClearTime > 4: horizontalBoxClearTime = 4
 print "Calculated horizontal clearance time: ", horizontalBoxClearTime
 moveForward(highSpeed, horizontalBoxClearTime)
@@ -227,17 +260,22 @@ wait(waitTime)
 
 # Turn left again and repeat if it still sees object
 printKeyStep("Turning left to get to side of box")
-stillSeesObject = rightTurnLeft("fast")
+turnsUntilObject = rightTurnLeft("fast")
+print "At start: ", turnsUntilObject
+stillSeesObject = (turnsUntilObject != 0)
 # Rotate a little to the left and see if there is still nothing
 if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
 while (stillSeesObject == True):
 	if (stillSeesObject): print "Still sees object after left turn, trying again"
 	wait(waitTime)
-	rightTurnRight("fast")
+	rightTurnRight("fast", turnsUntilObject)
 	moveForward(highSpeed, trialAndErrorMoveIncrements)
 	wait(waitTime)
 	horizontalBoxClearTime += trialAndErrorMoveIncrements
-	stillSeesObject = rightTurnLeft("fast")
+	print "Before: ", turnsUntilObject
+	turnsUntilObject = rightTurnLeft("fast")
+	print "After: ", turnsUntilObject
+	stillSeesObject = (turnsUntilObject != 0)
 	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
 	print "Recalculated horizontal clearance time: ", horizontalBoxClearTime
 
@@ -254,17 +292,20 @@ while (horizontalBoxClearTime > 0.1): #horizantalBoxClearTime is decreased as th
 	
 	# Turn left again and repeat if it still sees object
 	printKeyStep("Turning left to get to back of box")
-	stillSeesObject = rightTurnLeft("fast")
+	turnsUntilObject  = rightTurnLeft("fast")
+	stillSeesObject = (turnsUntilObject != 0)
+	print turnsUntilObject
 	# Rotate a little to the left and see if there is still nothing
 	if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
 	while (stillSeesObject == True):
 		if (stillSeesObject): print "Still sees object after left turn (trying to get to back of box), trying again"
 		wait(waitTime)
-		rightTurnRight("fast")
+		rightTurnRight("fast", turnsUntilObject)
 		moveForward(highSpeed, trialAndErrorMoveIncrements)
 		wait(waitTime)
-		verticalBoxClearTime += trialAndErrorMoveIncrements
-		stillSeesObject = rightTurnLeft("fast")
+		turnsUntilObject = rightTurnLeft("fast")
+		stillSeesObject = (turnsUntilObject != 0)
+		print turnsUntilObject
 		if (stillSeesObject == False): stillSeesObject = clearanceCheckLeft()
 	print "Calculated vertical clearance time: ", verticalBoxClearTime
 	

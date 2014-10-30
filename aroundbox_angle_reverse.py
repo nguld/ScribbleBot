@@ -1,12 +1,12 @@
 import time
 import sys
 
-IRPower1 = 127
-IRPower2 = 127
+IRPower1 = 128
+IRPower2 = 125
 highSpeed = 0.8
 lowSpeed = 0.5
 waitTime = 0.3
-angleCorrectionTurnTime = 0.205
+angleCorrectionTurnTime = 0.1
 
 # Trial and error, not really in cm or anything (seconds if anything)
 #distanceFromBox = 4
@@ -26,13 +26,6 @@ class color:
 	UNDERLINE	= '\033[4m'
 	END		= '\033[0m'
 
-def getAcurateObstacle(sensor = "center"):
-	checks = 50
-	total = 0
-	for i in range(checks):
-		total += getAccurateObstacle(sensor)
-	return total / checks
-
 # Takes either "high" or "low" as tolerance and returns if it sees an object in front of it as true or false
 def seesObstacle(tolerance):
 	if (tolerance == "high"):
@@ -40,7 +33,7 @@ def seesObstacle(tolerance):
 	else:
 		tolerance = 1100
 
-	return getAccurateObstacle("left") >= tolerance or getAccurateObstacle("center") >= tolerance or getAccurateObstacle("right") >= tolerance
+	return getObstacle("left") >= tolerance or getObstacle("center") >= tolerance or getObstacle("right") >= tolerance
 
 # Returns current clock time in seconds
 def getTime():
@@ -76,7 +69,7 @@ def rightTurnRight(speed, turns = 0):
 		for i in range(rightTurnRepeat):
 			turnRight(lowSpeed, rightTurnTime)
 			wait(waitTime)
-			printInfo("Obstacle Sensor: " + str(getAccurateObstacle("center")))
+			printInfo("Obstacle Sensor: " + str(getObstacle("center")))
 			if (seesObstacle("high") == True):
 				printInfo("Adding " + str(rightTurnTime) + "s")
 				timeUntilNoObject += rightTurnTime
@@ -187,84 +180,56 @@ def moveForwardCarefully(speed, time, errorOnObstacle):
 
 # Checks for the angle of the box, and returns how much it rotated to be perpendicular to the box
 def checkAngle():
-	turnRepeat = 3
-	checkTurnTime = 0.4
-	tolerance = 0
+	totalTimesTurningRight = 0
+	totalTimesTurningLeft = 0
 
-	# Check left
-	curProximity = getAccurateObstacle('center')
-	turnLeft(lowSpeed, checkTurnTime)
-	wait(waitTime)
-	newProximity = getAccurateObstacle('center')
-	
-	if (newProximity - curProximity >= -tolerance):
-		# Box is angled 45 degrees left
-		turnRight(lowSpeed, checkTurnTime)
-		wait(waitTime)
-		for i in range(turnRepeat):
-			turnLeft(lowSpeed, angleCorrectionTurnTime)
-			wait(waitTime)
-		return -3
-	else:
-		# Box is angled 45 degrees right
-		turnRight(lowSpeed, checkTurnTime)
-		wait(waitTime)
-		for i in range(turnRepeat):
-			turnRight(lowSpeed, angleCorrectionTurnTime)
-			wait(waitTime)
-		return 3
+	toleranceRight = -100
+	toleranceLeft = 120
 
-#	def checkAngle():
-#		totalTimesTurningRight = 0
-#		totalTimesTurningLeft = 0
-#	
-#		toleranceRight = -100
-#		toleranceLeft = 120
-#	
-#		# Try turning right
-#		while True:
-#			curProximity = getAccurateObstacle('center')
-#			turnRight(lowSpeed, angleCorrectionTurnTime)
-#			totalTimesTurningRight += 1
-#			wait(waitTime)
-#			newProximity = getAccurateObstacle('center')
-#			#turnRight(lowSpeed, angleCorrectionTurnTime)
-#			#totalTimesTurningRight += 1
-#			#wait(waitTime)
-#			#newProximity2 = getAccurateObstacle('center')
-#	
-#			printInfo("Before: " + str(curProximity) + " & After 1: " + str(newProximity)) # + " & After 2: " + str(newProximity2))
-#	
-#			if (curProximity - newProximity > -toleranceRight): # and curProximity - newProximity2 > -toleranceRight):
-#				# Object is further from pependicular
-#				for i in range(2):
-#					turnLeft(lowSpeed, angleCorrectionTurnTime)
-#					totalTimesTurningRight -= 1
-#					wait(waitTime)
-#				break;
-#		# Try turning left
-#		while True:
-#			curProximity = getAccurateObstacle('center')
-#			turnLeft(lowSpeed, angleCorrectionTurnTime)
-#			totalTimesTurningLeft += 1
-#			wait(waitTime)
-#			newProximity = getAccurateObstacle('center')
-#			#turnLeft(lowSpeed, angleCorrectionTurnTime)
-#			#totalTimesTurningLeft += 1
-#			#wait(waitTime)
-#			#newProximity2 = getAccurateObstacle('center')
-#	
-#			printInfo("Before: " + str(curProximity) + " & After 1: " + str(newProximity)) # + " & After 2: " + str(newProximity2))
-#	
-#			if (curProximity - newProximity > -toleranceLeft): # and curProximity - newProximity2 > -toleranceLeft):
-#				# Object is further from pependicular
-#				for i in range(2):
-#					turnRight(lowSpeed, angleCorrectionTurnTime)
-#					totalTimesTurningLeft -= 1
-#					wait(waitTime)
-#				break;
-#	
-#		return totalTimesTurningRight - totalTimesTurningLeft
+	# Try turning left
+	while True:
+		curProximity = getObstacle('center')
+		turnLeft(lowSpeed, angleCorrectionTurnTime)
+		totalTimesTurningLeft += 1
+		wait(waitTime)
+		newProximity = getObstacle('center')
+		#turnLeft(lowSpeed, angleCorrectionTurnTime)
+		#totalTimesTurningLeft += 1
+		#wait(waitTime)
+		#newProximity2 = getObstacle('center')
+
+		printInfo("Before: " + str(curProximity) + " & After 1: " + str(newProximity)) # + " & After 2: " + str(newProximity2))
+
+		if (curProximity - newProximity > -toleranceLeft): # and curProximity - newProximity2 > -toleranceLeft):
+			# Object is further from pependicular
+			for i in range(2):
+				turnRight(lowSpeed, angleCorrectionTurnTime)
+				totalTimesTurningLeft -= 1
+				wait(waitTime)
+			break;
+	# Try turning right
+	while True:
+		curProximity = getObstacle('center')
+		turnRight(lowSpeed, angleCorrectionTurnTime)
+		totalTimesTurningRight += 1
+		wait(waitTime)
+		newProximity = getObstacle('center')
+		#turnRight(lowSpeed, angleCorrectionTurnTime)
+		#totalTimesTurningRight += 1
+		#wait(waitTime)
+		#newProximity2 = getObstacle('center')
+
+		printInfo("Before: " + str(curProximity) + " & After 1: " + str(newProximity)) # + " & After 2: " + str(newProximity2))
+
+		if (curProximity - newProximity > -toleranceRight): # and curProximity - newProximity2 > -toleranceRight):
+			# Object is further from pependicular
+			for i in range(2):
+				turnLeft(lowSpeed, angleCorrectionTurnTime)
+				totalTimesTurningRight -= 1
+				wait(waitTime)
+			break;
+
+	return totalTimesTurningRight - totalTimesTurningLeft
 
 setIRPower(IRPower1)
 
