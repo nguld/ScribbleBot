@@ -1,0 +1,25 @@
+body
+{
+  background-image: url('background.jpg');
+  color: white;
+  font-size: 30px;
+}
+
+div
+{
+  text-align:center;
+}
+
+input {
+background-color: rgba(0,0,0,0.1);
+color: red;
+border: none;
+height: 25px;
+font-size: 25px;
+//opacity:0;
+}
+td
+{
+  padding-left: 20px;
+  padding-right:20px;
+}
