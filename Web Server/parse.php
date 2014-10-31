@@ -62,8 +62,10 @@ if (containsAll(array("round", "box"))) {
 	}
 } else if (containsOne(array("stop", "halt", "cancel")) && containsOne(array("current"))) {
 	$function = "stopCurrent";
+	$shouldSpeak = false;
 } else if (containsOne(array("stop", "halt", "cancel"))) {
 	$function = "stopAll";
+	$shouldSpeak = false;
 } else if (containsOne(array("find", "look for", "follow", "go to")) && containsOne($colors)) {
 	$function = "findColour";
 	$arguments[] = elementInInput($colors);
