@@ -80,7 +80,7 @@ def determineDirection (colour):
             # FORMULA 1
             distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
             if (distanceFrom < 100):
-                setRGB(pixel, (255,255,255))
+                #setRGB(pixel, (255,255,255))
             #################################################################
 
             #FORMULA 2
@@ -92,14 +92,14 @@ def determineDirection (colour):
                         if i < (index+1) * (w/5):
                             totalArray[index] += 1
                             break
-            else:
-                setRGB(pixel, (0,0,0))
-            setPixel(pic, i, j, pixel)
+            #else:
+                #setRGB(pixel, (0,0,0))
+            #setPixel(pic, i, j, pixel)
 
     ####################
     for t in totalArray:
         print "| " , t , " "
-    show(pic)
+    #show(pic)
 
     errorTollerance = 10
 

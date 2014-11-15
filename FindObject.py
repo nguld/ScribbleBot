@@ -44,7 +44,7 @@ def findColour(key):
 
     colour = colourKey[key]
 
-    direction = determineDirection(colour)
+    #direction = determineDirection(colour)
     leftMotor = 1
     rightMotor = 1
     while True:#getObstacle("Center") <= 1100 and direction != "NONE":
@@ -77,7 +77,7 @@ def findColour(key):
                 break;
         motors(leftMotor,rightMotor)
 
-findColour('black');
+#findColour('black');
 #while True:
  #   kc = input()
   #  findKColour(kc)
