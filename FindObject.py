@@ -44,7 +44,6 @@ def findColour(key):
 
     colour = colourKey[key]
 
-    #direction = determineDirection(colour)
     leftMotor = 1
     rightMotor = 1
     lastSeenPos = "NONE"
@@ -85,16 +84,17 @@ def findColour(key):
                 break;
             if case("NONE"):
                 if lastSeenPos == "FARRIGHT" or lastSeenPos == "MIDRIGHT":
-                    rightMotor = -.2 #Turn Right
-                    leftMotor = .2
+                    if lastSeenPos == "RIGHTCENTER":
+                        rightMotor = -.2 #Turn Right
+                        leftMotor = .2
                 else:
                     rightMotor = .2 #Turn Left
                     leftMotor = -.2
 
-                lastSeenPos = "NONE"
+                #lastSeenPos = "NONE"
                 break;
             if case("FAILED"):
-                lastSeenPos = "FAILED"
+                #lastSeenPos = "FAILED"
                 rightMotor = 0
                 leftMotor = 0
                 break;
