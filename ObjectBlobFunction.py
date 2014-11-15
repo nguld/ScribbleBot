@@ -117,49 +117,34 @@ def determineDirection (colour):
             return "NONE"
 
     print indexOfLargest
-    while switch(indexOfLargest):
-        if case(0):
-            print "FARLEFT"
-            return "FARLEFT"
-            break;
-        if case(1):
-            print "MIDLEFT"
-            return "MIDLEFT"
-            break;
-        if case(2):
-            print "LEFTCENTER"
-            return "LEFTCENTER"
-            break;
-        if case(3):
-            print "RIGHTCENTER"
-            return "RIGHTCENTER"
-            break;
-        if case(4):
-            print "MIDRIGHT"
-            return "MIDRIGHT"
-            break;
-        if case(5):
-            print "FARRIGHT"
-            return "FARRIGHT"
-            break;
-
-        print "FAILED INDEX"
+    if (indexOfLargest==0):
+        print "FARLEFT"
+        return "FARLEFT"
+        break;
+    if (indexOfLargest==1):
+        print "MIDLEFT"
+        return "MIDLEFT"
+        break;
+    if (indexOfLargest==2):
+        print "LEFTCENTER"
+        return "LEFTCENTER"
+        break;
+    if (indexOfLargest==3):
+        print "RIGHTCENTER"
+        return "RIGHTCENTER"
+        break;
+    if (indexOfLargest==4):
+        print "MIDRIGHT"
+        return "MIDRIGHT"
+        break;
+    if (indexOfLargest==5):
+        print "FARRIGHT"
+        return "FARRIGHT"
         break;
 
+    print "FAILED INDEX"
+    break;
+
     print "Reached end of function that is supposed to return a value"
-
-
-
-#Makeshift Switch Statement Class
-class switch(object):
-    value = None
-    def __new__(class_, value):
-        class_.value = value
-        return True
-    def __del__(class_, vlaue):
-        return True
-
-def case(*args):
-    return any((arg == switch.value for arg in args))
 
 #determineDirection(yellow)
