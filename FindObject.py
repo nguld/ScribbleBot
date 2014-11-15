@@ -52,7 +52,7 @@ def findColour(key):
 
         while switch(direction):
             if case("FARLEFT"):
-                rightMotor = .7
+                rightMotor = 1
                 leftMotor = .3
                 break;
             if case("MIDLEFT"):
@@ -72,12 +72,12 @@ def findColour(key):
                 leftMotor = .7
                 break;
             if case("FARRIGHT"):
-                rightMotor = 1
-                leftMotor = .5
+                rightMotor = .3
+                leftMotor = 1
                 break;
             if case("NONE"):
-                rightMotor = .3
-                leftMotor = 0
+                rightMotor = .2
+                leftMotor = -.2
                 break;
             if case("FAILED"):
                 rightMotor = 0
