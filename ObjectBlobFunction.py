@@ -148,9 +148,9 @@ def determineDirection (colour):
             break;
 
         print "FAILED INDEX"
+        break;
 
-    return "FAILED"
-    print "FAILED"
+    print "Reached end of function that is supposed to return a value"
 
 
 
@@ -163,6 +163,3 @@ class switch(object):
 
 def case(*args):
     return any((arg == switch.value for arg in args))
-
-while True:
-    determineDirection(red)

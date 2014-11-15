@@ -98,6 +98,8 @@ def findColour(key):
                 rightMotor = 0
                 leftMotor = 0
                 break;
+            print "UNKNOWN 'direction'"
+            break;
                 
         motors(leftMotor,rightMotor)
 
