@@ -78,7 +78,7 @@ def findColour(key):
             if case("NONE"):
                 rightMotor = .3
                 leftMotor = 0
-            if case("FAILED")
+            if case("FAILED"):
                 rightMotor = 0
                 leftMotor = 0
         motors(leftMotor,rightMotor)
