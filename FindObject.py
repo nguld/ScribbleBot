@@ -49,7 +49,7 @@ def findColour(key):
     rightMotor = 1
     while True:#getObstacle("Center") <= 1100 and direction != "NONE":
         direction = determineDirection(colour)
-
+        beep(.1)
         while switch(direction):
             if case("FARLEFT"):
                 rightMotor = 1
