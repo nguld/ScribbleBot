@@ -43,7 +43,7 @@ def determineDirection (colour):
     pic = takePicture() #Uncomment this for robot
 
     #path = os.path.dirname(os.path.realpath(__file__))
-    #pic = makePicture(path + "/stripes.gif") #jpg or gif only
+    #pic = makePicture(path + "/lucy.gif") #jpg or gif only
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
     #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
@@ -78,27 +78,23 @@ def determineDirection (colour):
             r, g, b = getRGB(pixel)
 
             # FORMULA 1
-            distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
-            if (distanceFrom < 100):
-                #setRGB(pixel, (255,255,255))
-            #################################################################
-
-            #FORMULA 2
-            #distanceFrom = abs(r-RGBred) + abs(g-RGBgreen) + abs(b-RGBblue)
-            #if (distanceFrom < 120):
-            #################################################################
+            distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
+            #distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
+            if (distanceFrom < 75):
+            #    setRGB(pixel, (255,255,255))
                 for index in range(0,6):
-                    if i > (index) * (w/5): #Check if greater then lower
-                        if i < (index+1) * (w/5):
+                    if i > (index) * (w/6): #Check if greater then lower
+                        if i < (index+1) * (w/6):
                             totalArray[index] += 1
                             break
             #else:
-                #setRGB(pixel, (0,0,0))
+            #    setRGB(pixel, (0,0,0))
             #setPixel(pic, i, j, pixel)
 
     ####################
-    for t in totalArray:
-        print "| " , t , " "
+    #for t in totalArray:
+    #    print "| " , t , " "
+    #savePicture(pic, "lucyProcessed.gif")
     #show(pic)
 
     errorTollerance = 10
@@ -163,3 +159,5 @@ class switch(object):
 
 def case(*args):
     return any((arg == switch.value for arg in args))
+
+#determineDirection(yellow)

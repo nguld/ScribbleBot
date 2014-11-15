@@ -53,40 +53,39 @@ def findColour(key):
 
         while switch(direction):
             if case("FARLEFT"):
-                lastSeenPos = "FARLEFT"
+                lastSeenPos = "LEFT"
                 rightMotor = .7
                 leftMotor = .3
                 break;
             if case("MIDLEFT"):
-                lastSeenPos = "MIDLEFT"
+                lastSeenPos = "LEFT"
                 rightMotor = .7
                 leftMotor  = .5
                 break;
             if case("LEFTCENTER"):
-                lastSeenPos = "LEFTCENTER"
+                lastSeenPos = "LEFT"
                 rightMotor = .7
                 leftMotor  = .6
                 break;
             if case("RIGHTCENTER"):
-                lastSeenPos = "RIGHTCENTER"
+                lastSeenPos = "RIGHT"
                 rightMotor = .6
                 leftMotor  = .7
                 break;
             if case("MIDRIGHT"):
-                lastSeenPos = "MIDRIGHT"
+                lastSeenPos = "RIGHT"
                 rightMotor = .5
                 leftMotor  = .7
                 break;
             if case("FARRIGHT"):
-                lastSeenPos = "FARRIGHT"
+                lastSeenPos = "RIGHT"
                 rightMotor = .3
                 leftMotor  = .7
                 break;
             if case("NONE"):
-                if lastSeenPos == "FARRIGHT" or lastSeenPos == "MIDRIGHT":
-                    if lastSeenPos == "RIGHTCENTER":
-                        rightMotor = -.2 #Turn Right
-                        leftMotor = .2
+                if lastSeenPos == "RIGHT":
+                    rightMotor = -.2 #Turn Right
+                    leftMotor = .2
                 else:
                     rightMotor = .2 #Turn Left
                     leftMotor = -.2
