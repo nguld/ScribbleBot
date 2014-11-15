@@ -40,10 +40,10 @@ orange =    makeColor(225,100, 0)
 ###################################################
 def determineDirection (colour):
 
-    pic = takePicture() #Uncomment this for robot
+    #pic = takePicture() #Uncomment this for robot
 
-    #path = os.path.dirname(os.path.realpath(__file__))
-    #pic = makePicture(path + "/stripes.gif") #jpg or gif only
+    path = os.path.dirname(os.path.realpath(__file__))
+    pic = makePicture(path + "/stripes.gif") #jpg or gif only
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
     #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
@@ -147,6 +147,8 @@ def determineDirection (colour):
             return "FARRIGHT"
             break;
         print "FAILED INDEX"
+    return "FAILED"
+    print "FAILED"
 
 
 
@@ -159,3 +161,6 @@ class switch(object):
 
 def case(*args):
     return any((arg == switch.value for arg in args))
+
+while True:
+    determineDirection(red)
