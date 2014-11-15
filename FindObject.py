@@ -55,32 +55,26 @@ def findColour(key):
             lastSeenPos = "LEFT"
             rightMotor = .7
             leftMotor = .3
-            break;
         if (direction=="MIDLEFT"):
             lastSeenPos = "LEFT"
             rightMotor = .7
             leftMotor  = .5
-            break;
         if (direction=="LEFTCENTER"):
             lastSeenPos = "LEFT"
             rightMotor = .7
             leftMotor  = .6
-            break;
         if (direction=="RIGHTCENTER"):
             lastSeenPos = "RIGHT"
             rightMotor = .6
             leftMotor  = .7
-            break;
         if (direction=="MIDRIGHT"):
             lastSeenPos = "RIGHT"
             rightMotor = .5
             leftMotor  = .7
-            break;
         if (direction=="FARRIGHT"):
             lastSeenPos = "RIGHT"
             rightMotor = .3
             leftMotor  = .7
-            break;
         if (direction=="NONE"):
             if lastSeenPos == "RIGHT":
                 rightMotor = -.2 #Turn Right
@@ -90,14 +84,11 @@ def findColour(key):
                 leftMotor = -.2
 
             #lastSeenPos = "NONE"
-            break;
         if (direction=="FAILED"):
             #lastSeenPos = "FAILED"
             rightMotor = 0
             leftMotor = 0
-            break;
         print "UNKNOWN 'direction'"
-        break;
                 
     motors(leftMotor,rightMotor)
 

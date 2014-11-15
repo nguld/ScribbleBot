@@ -120,30 +120,23 @@ def determineDirection (colour):
     if (indexOfLargest==0):
         print "FARLEFT"
         return "FARLEFT"
-        break;
     if (indexOfLargest==1):
         print "MIDLEFT"
         return "MIDLEFT"
-        break;
     if (indexOfLargest==2):
         print "LEFTCENTER"
         return "LEFTCENTER"
-        break;
     if (indexOfLargest==3):
         print "RIGHTCENTER"
         return "RIGHTCENTER"
-        break;
     if (indexOfLargest==4):
         print "MIDRIGHT"
         return "MIDRIGHT"
-        break;
     if (indexOfLargest==5):
         print "FARRIGHT"
         return "FARRIGHT"
-        break;
 
     print "FAILED INDEX"
-    break;
 
     print "Reached end of function that is supposed to return a value"
 
