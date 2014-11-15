@@ -38,12 +38,12 @@ orange =    makeColor(225,100, 0)
 #    majority of the pixels are on
 #
 ###################################################
-
 def determineDirection (colour):
 
-    pic = takePicture() #Uncomment this for robot
+    #pic = takePicture() #Uncomment this for robot
 
-    #pic = makePicture("/Users/Karel/Desktop/stripes.gif") #jpg or gif only
+    path = os.path.dirname(os.path.realpath(__file__))
+    pic = makePicture(path + "/stripes.gif") #jpg or gif only
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
     #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
@@ -52,10 +52,24 @@ def determineDirection (colour):
     w = getWidth(pic)
 
     # Variable for image analysis
-    leftSideTotal = 0
-    rightSideTotal = 0
-    centerTotal = 0
+    farLeftTotal = 0
+    midLeftTotal = 0
+    farRightTotal = 0
+    midRightTotal = 0
+    centerLeftTotal = 0
+    centerRightTotal = 0
+    totalArray = [farLeftTotal, midLeftTotal, centerLeftTotal, centerRightTotal, midRightTotal, farRightTotal]
 
+    # How the screen is split up
+    #fLS|mLS|cLS|cRS|mRS|fRS|
+    #------------------------
+    #   |   |   |   |   |   |
+    #   |   |   |   |   |   |
+    #   |   |   |   |   |   |
+    #   |   |   |   |   |   |
+    #   |   |   |   |   |   |
+    #   |   |   |   |   |   |
+    #------------------------
 
 
     for i in range(1, w):
@@ -66,35 +80,82 @@ def determineDirection (colour):
             # FORMULA 1
             distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
             if (distanceFrom < 100):
+                setRGB(pixel, (255,255,255))
             #################################################################
 
             #FORMULA 2
             #distanceFrom = abs(r-RGBred) + abs(g-RGBgreen) + abs(b-RGBblue)
             #if (distanceFrom < 120):
             #################################################################
-
-                #setRGB(pixel, (255,255,255))
-
-                if (i < w/3):
-                    leftSideTotal += 1
-                elif (i > w - (w/3)):
-                    rightSideTotal += 1
-                else:
-                    centerTotal += 1
+                for index in range(0,6):
+                    if i > (index) * (w/5): #Check if greater then lower
+                        if i < (index+1) * (w/5):
+                            totalArray[index] += 1
+                            break
             else:
                 setRGB(pixel, (0,0,0))
+            setPixel(pic, i, j, pixel)
 
-            #setPixel(pic, i, j, pixel)
+    ####################
+    for t in totalArray:
+        print "| " , t , " "
+    show(pic)
 
     errorTollerance = 10
 
-    #determine direction
-    if (abs(leftSideTotal - centerTotal) < errorTollerance and abs(leftSideTotal - rightSideTotal) < errorTollerance and abs(rightSideTotal - centerTotal) < errorTollerance):
-        return "NONE"
+    #determine which total is largest to determine direction2
+    indexOfLargest = -1
+    largestNum = -1
+    for index in range(0,6):
+        if totalArray[index] > largestNum:
+            largestNum = totalArray[index]
+            indexOfLargest = index
 
-    if (leftSideTotal > centerTotal and leftSideTotal > rightSideTotal):
-        return "LEFT"
-    elif (rightSideTotal > centerTotal and rightSideTotal > leftSideTotal):
-        return "RIGHT"
-    else:
-        return "CENTER"
+
+    #Screen for error tollerance
+    for i in range(0,5):
+        if (abs(totalArray[i] - totalArray[i+1]) > errorTollerance):
+            break
+        if (i == 4):
+            print "NONE"
+            return "NONE"
+
+    print indexOfLargest
+    while switch(indexOfLargest):
+        if case(0):
+            print "FARLEFT"
+            return "FARLEFT"
+            break;
+        if case(1):
+            print "MIDLEFT"
+            return "MIDLEFT"
+            break;
+        if case(2):
+            print "LEFTCENTER"
+            return "LEFTCENTER"
+            break;
+        if case(3):
+            print "RIGHTCENTER"
+            return "RIGHTCENTER"
+            break;
+        if case(4):
+            print "MIDRIGHT"
+            return "MIDRIGHT"
+            break;
+        if case(5):
+            print "FARRIGHT"
+            return "FARRIGHT"
+            break;
+        print "FAILED INDEX"
+
+
+
+#Makeshift Switch Statement Class
+class switch(object):
+    value = None
+    def __new__(class_, value):
+        class_.value = value
+        return True
+
+def case(*args):
+    return any((arg == switch.value for arg in args))
