@@ -40,10 +40,10 @@ orange =    makeColor(225,100, 0)
 ###################################################
 def determineDirection (colour):
 
-    #pic = takePicture() #Uncomment this for robot
+    pic = takePicture() #Uncomment this for robot
 
-    path = os.path.dirname(os.path.realpath(__file__))
-    pic = makePicture(path + "/stripes.gif") #jpg or gif only
+    #path = os.path.dirname(os.path.realpath(__file__))
+    #pic = makePicture(path + "/stripes.gif") #jpg or gif only
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
     #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
