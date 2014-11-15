@@ -156,6 +156,8 @@ class switch(object):
     def __new__(class_, value):
         class_.value = value
         return True
+    def __del__(class_, vlaue):
+        return True
 
 def case(*args):
     return any((arg == switch.value for arg in args))
