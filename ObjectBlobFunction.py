@@ -146,7 +146,9 @@ def determineDirection (colour):
             print "FARRIGHT"
             return "FARRIGHT"
             break;
+
         print "FAILED INDEX"
+
     return "FAILED"
     print "FAILED"
 

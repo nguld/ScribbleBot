@@ -78,9 +78,11 @@ def findColour(key):
             if case("NONE"):
                 rightMotor = .3
                 leftMotor = 0
+                break;
             if case("FAILED"):
                 rightMotor = 0
                 leftMotor = 0
+                break;
         motors(leftMotor,rightMotor)
 
 #findColour('black');
