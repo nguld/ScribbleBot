@@ -2,6 +2,12 @@ from myro import *
 
 #init("/dev/tty.IPRE6-193914-DevB")
 
+try:
+        from Sounds import *
+    except Exception:
+        print "Can not find 'Sounds'"
+        pass
+
 ###############################################################################
 from math import *
 
@@ -217,8 +223,8 @@ def findColour(key):
         #print "UNKNOWN 'direction'"
         motors(leftMotor,rightMotor)
 
-	if (getObstacle("center") >= 1100 and direction != "NONE"):
-	    break
+	    if (getObstacle("center") >= 1100 and direction != "NONE"):
+	       break
     stop();
 
     try:
