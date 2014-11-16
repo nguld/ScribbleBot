@@ -40,10 +40,10 @@ orange =    makeColor(225,100, 0)
 ###################################################
 def determineDirection (colour):
 
-    pic = takePicture() #Uncomment this for robot
+    #pic = takePicture() #Uncomment this for robot
 
-    #path = os.path.dirname(os.path.realpath(__file__))
-    #pic = makePicture(path + "/lucy.gif") #jpg or gif only
+    path = os.path.dirname(os.path.realpath(__file__))
+    pic = makePicture(path + "/lucy.gif") #jpg or gif only
 
     RGBred, RGBgreen, RGBblue = getRGB(colour);
     #print "|" , RGBred , "|" , RGBgreen , "|" , RGBblue , "|"
@@ -72,8 +72,8 @@ def determineDirection (colour):
     #------------------------
 
 
-    for i in range(1, w):
-        for j in range(1, h):
+    for i in range(1, w, 2):
+        for j in range(1, h, 2):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
 
@@ -89,7 +89,7 @@ def determineDirection (colour):
                             break
             #else:
             #    setRGB(pixel, (0,0,0))
-            #setPixel(pic, i, j, pixel)
+            #setPixel(pic, i/2, j/2, pixel)
 
     ####################
     #for t in totalArray:
@@ -140,4 +140,4 @@ def determineDirection (colour):
 
     print "Reached end of function that is supposed to return a value"
 
-#determineDirection(yellow)
+#determineDirection(pink)
