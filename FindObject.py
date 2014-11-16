@@ -5,9 +5,9 @@ from myro import *
 ###############################################################################
 from math import *
 
-###################################################
-#                 Define Colours                  #
-###################################################
+####################################################
+#                 Define Colours                   #
+####################################################
 black =     makeColor( 20, 20, 20)
 white =     makeColor(235, 235, 235)
 blue =      makeColor( 50, 50, 255)
@@ -25,20 +25,20 @@ magenta =   makeColor(255, 50, 255)
 cyan =      makeColor( 50, 255, 255)
 purple =    makeColor(127, 50, 255)
 orange =    makeColor(225,100, 50)
-###################################################
+#####################################################
 
 
 
-###################################################
-#                Image Processing                 #
-###################################################
-#
-# 1) Change pixel colour based on colour tollerance
-#
-# 2) Determines what side of the picture the
-#    majority of the pixels are on
-#
-###################################################
+#####################################################
+#                Image Processing                   #
+#####################################################
+#                                                   #
+# 1) Change pixel colour based on colour tollerance #
+#                                                   #
+# 2) Determines what side of the picture the        #
+#    majority of the pixels are only                #
+#                                                   #
+#####################################################
 def determineDirection (colour, num):
 
     pic = takePicture() #Uncomment this for robot
@@ -171,6 +171,7 @@ def findColour(key):
     rightMotor = 1
     lastSeenPos = "NONE"
     counter = 0;
+    direction = determineDirection(colour, counter)
     while getObstacle("center") <= 1100 and direction != "NONE":
         counter += 1
         direction = determineDirection(colour, counter)
@@ -208,11 +209,11 @@ def findColour(key):
                 rightMotor = .2 #Turn Left
                 leftMotor = -.2
 
-            #lastSeenPos = "NONE"
+            lastSeenPos = "NONE"
         if (direction=="FAILED"):
             #lastSeenPos = "FAILED"
             rightMotor = 0
             leftMotor = 0
         #print "UNKNOWN 'direction'"
-                
         motors(leftMotor,rightMotor)
+#####################################################################
