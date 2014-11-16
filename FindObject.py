@@ -2,11 +2,7 @@ from myro import *
 
 #init("/dev/tty.IPRE6-193914-DevB")
 
-try:
-        from Sounds import *
-    except Exception:
-        print "Can not find 'Sounds'"
-        pass
+from Sounds import *
 
 ###############################################################################
 from math import *
@@ -31,6 +27,8 @@ magenta =   makeColor(255, 50, 255)
 cyan =      makeColor( 50, 255, 255)
 purple =    makeColor(127, 50, 255)
 orange =    makeColor(225,100, 50)
+green =     makeColor( 50, 255, 50),
+dark green= makeColor(20, 100, 20)}
 #####################################################
 
 
@@ -77,16 +75,19 @@ def determineDirection (colour, num):
     #   |   |   |   |   |   |
     #------------------------
 
-
-    for i in range(1, w, 2):
-        for j in range(1, h, 2):
+    numDivisions = 2
+    distanceFromTollerance = 100
+    
+    for i in range(1, w, numDivisions):
+        for j in range(1, h, numDivisions):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
 
             # FORMULA 1
-            distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
-            #distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
-            if (distanceFrom < 100):
+            #distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
+            distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
+            
+            if (distanceFrom < distanceFromTollerance):
                 setRGB(pixel, (255,255,255))
                 for index in range(0,6):
                     if i > (index) * (w/6): #Check if greater then lower
@@ -95,11 +96,11 @@ def determineDirection (colour, num):
                             break
             else:
                 setRGB(pixel, (0,0,0))
-            setPixel(pic, i/2, j/2, pixel)
+            setPixel(pic, i/numDivisions, j/numDivisions, pixel)
 
-    outputFile = "lucyProcessed" + str(num) + ".gif"
+    outputFile = "Processed" + str(num) + ".gif"
     #print outputFile
-    #savePicture(pic, outputFile)
+    savePicture(pic, outputFile)
     #show(pic)
 
     errorTollerance = 10
@@ -145,8 +146,6 @@ def determineDirection (colour, num):
 
     print "Reached end of function that is supposed to return a value"
 
-#determineDirection(pink,1)
-
 ###############################################################################
 
 colourKey = {'black': makeColor( 20, 20, 20),
@@ -177,7 +176,6 @@ def findColour(key):
     rightMotor = 1
     lastSeenPos = "NONE"
     counter = 0;
-    direction = determineDirection(colour, counter)
     while True:
         counter += 1
         direction = determineDirection(colour, counter)
@@ -223,12 +221,17 @@ def findColour(key):
         #print "UNKNOWN 'direction'"
         motors(leftMotor,rightMotor)
 
-	    if (getObstacle("center") >= 1100 and direction != "NONE"):
-	       break
-    stop();
+        numIter = 10
+        total = 0
+        for i in range(1,numIter+1):
+            total += getObstacle("center")
 
-    try:
-        playMarioOutro()
-    except Exception: 
-        pass
+        total /= numIter
+
+        if (total >= 1100 and direction != "NONE"):
+            motors(0,0)
+            stop()
+            playMarioOutro()
+            break
+    #stop();
 #####################################################################
