@@ -12,23 +12,23 @@ from math import *
 ####################################################
 black =     makeColor( 20, 20, 20)
 white =     makeColor(235, 235, 235)
-blue =      makeColor( 50, 50, 255)
+blue =      makeColor( 50, 50, 250)
 darkBlue =  makeColor( 20, 20, 100)
-pink =      makeColor(255, 175, 175)
-red =       makeColor(255, 50, 50)
+pink =      makeColor(250, 175, 175)
+red =       makeColor(250, 50, 50)
 darkRed =   makeColor(100, 10, 10)
-green =     makeColor( 50, 255, 50)
+green =     makeColor( 50, 250, 50)
 darkGreen = makeColor(20, 100, 20)
 gray =      makeColor(128, 128, 128)
 darkGray =  makeColor( 64, 64, 64)
 lightGray = makeColor(192, 192, 192)
-yellow =    makeColor(255, 255, 50)
-magenta =   makeColor(255, 50, 255)
-cyan =      makeColor( 50, 255, 255)
-purple =    makeColor(127, 50, 255)
+yellow =    makeColor(250, 250, 60)
+magenta =   makeColor(250, 50, 250)
+cyan =      makeColor( 50, 250, 250)
+purple =    makeColor(127, 50, 250)
 orange =    makeColor(225,100, 50)
-green =     makeColor( 50, 255, 50),
-dark green= makeColor(20, 100, 20)}
+green =     makeColor( 50, 250, 50)
+darkGreen=  makeColor(20, 100, 20)
 #####################################################
 
 
@@ -75,7 +75,7 @@ def determineDirection (colour, num):
     #   |   |   |   |   |   |
     #------------------------
 
-    numDivisions = 2
+    numDivisions = 3
     distanceFromTollerance = 100
     
     for i in range(1, w, numDivisions):
@@ -231,7 +231,7 @@ def findColour(key):
         if (total >= 1100 and direction != "NONE"):
             motors(0,0)
             stop()
-            playMarioOutro()
+            marioOutro()
             break
     #stop();
 #####################################################################
