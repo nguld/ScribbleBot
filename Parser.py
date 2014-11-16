@@ -60,4 +60,4 @@ def parse(inputText):
 	else:
 		command = 'speakCustom("'+inputText+'")'
 
-	print command
+	return command
