@@ -47,8 +47,10 @@ def findColour(key):
     leftMotor = 1
     rightMotor = 1
     lastSeenPos = "NONE"
+    counter = 0;
     while True:#getObstacle("Center") <= 1100 and direction != "NONE":
-        direction = determineDirection(colour)
+        counter += 1
+        direction = determineDirection(colour, counter)
         beep(.1)
 
         if (direction == "FARLEFT"):

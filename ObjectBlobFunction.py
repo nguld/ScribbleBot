@@ -38,7 +38,7 @@ orange =    makeColor(225,100, 0)
 #    majority of the pixels are on
 #
 ###################################################
-def determineDirection (colour):
+def determineDirection (colour, num):
 
     pic = takePicture() #Uncomment this for robot
 
@@ -72,29 +72,31 @@ def determineDirection (colour):
     #------------------------
 
 
-    for i in range(1, w, 2):
-        for j in range(1, h, 2):
+    for i in range(1, w, 4):
+        for j in range(1, h, 4):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
 
             # FORMULA 1
             distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
             #distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
-            if (distanceFrom < 75):
-            #    setRGB(pixel, (255,255,255))
+            if (distanceFrom < 100):
+                setRGB(pixel, (255,255,255))
                 for index in range(0,6):
                     if i > (index) * (w/6): #Check if greater then lower
                         if i < (index+1) * (w/6):
                             totalArray[index] += 1
                             break
-            #else:
-            #    setRGB(pixel, (0,0,0))
-            #setPixel(pic, i/2, j/2, pixel)
+            else:
+                setRGB(pixel, (0,0,0))
+            setPixel(pic, i/4, j/4, pixel)
 
     ####################
     #for t in totalArray:
     #    print "| " , t , " "
-    #savePicture(pic, "lucyProcessed.gif")
+    outputFile = "lucyProcessed" + str(num) + ".gif"
+    #print outputFile
+    savePicture(pic, outputFile)
     #show(pic)
 
     errorTollerance = 10
@@ -140,4 +142,4 @@ def determineDirection (colour):
 
     print "Reached end of function that is supposed to return a value"
 
-#determineDirection(pink)
+#determineDirection(pink,1)
