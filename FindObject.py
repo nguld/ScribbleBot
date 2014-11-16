@@ -88,9 +88,9 @@ def findColour(key):
             #lastSeenPos = "FAILED"
             rightMotor = 0
             leftMotor = 0
-        print "UNKNOWN 'direction'"
+        #print "UNKNOWN 'direction'"
                 
-    motors(leftMotor,rightMotor)
+        motors(leftMotor,rightMotor)
 
 #findColour('black');
 #while True:
