@@ -72,8 +72,8 @@ def determineDirection (colour, num):
     #------------------------
 
 
-    for i in range(1, w, 4):
-        for j in range(1, h, 4):
+    for i in range(1, w, 2):
+        for j in range(1, h, 2):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
 
@@ -89,11 +89,11 @@ def determineDirection (colour, num):
                             break
             else:
                 setRGB(pixel, (0,0,0))
-            setPixel(pic, i/4, j/4, pixel)
+            setPixel(pic, i/2, j/2, pixel)
 
     outputFile = "lucyProcessed" + str(num) + ".gif"
     #print outputFile
-    savePicture(pic, outputFile)
+    #savePicture(pic, outputFile)
     #show(pic)
 
     errorTollerance = 10
@@ -172,7 +172,7 @@ def findColour(key):
     lastSeenPos = "NONE"
     counter = 0;
     direction = determineDirection(colour, counter)
-    while getObstacle("center") <= 1100 and direction != "NONE":
+    while True:
         counter += 1
         direction = determineDirection(colour, counter)
         beep(.1)
@@ -216,4 +216,13 @@ def findColour(key):
             leftMotor = 0
         #print "UNKNOWN 'direction'"
         motors(leftMotor,rightMotor)
+
+	if (getObstacle("center") >= 1100 and direction != "NONE"):
+	    break
+    stop();
+
+    try:
+        playMarioOutro()
+    except Exception: 
+        pass
 #####################################################################
