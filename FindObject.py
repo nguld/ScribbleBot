@@ -88,19 +88,19 @@ def determineDirection (colour, num):
             distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
             
             if (distanceFrom < distanceFromTollerance):
-                setRGB(pixel, (255,255,255))
+                #############setRGB(pixel, (255,255,255))
                 for index in range(0,6):
                     if i > (index) * (w/6): #Check if greater then lower
                         if i < (index+1) * (w/6):
                             totalArray[index] += 1
                             break
-            else:
-                setRGB(pixel, (0,0,0))
-            setPixel(pic, i/numDivisions, j/numDivisions, pixel)
+            ############else:
+                ###########setRGB(pixel, (0,0,0))
+            ########setPixel(pic, i/numDivisions, j/numDivisions, pixel)
 
-    outputFile = "Processed" + str(num) + ".gif"
+    ########outputFile = "Processed" + str(num) + ".gif"
     #print outputFile
-    savePicture(pic, outputFile)
+    #######savePicture(pic, outputFile)
     #show(pic)
 
     errorTollerance = 10
