@@ -2,7 +2,10 @@ from Parser import parse
 from speakCustom import *
 from Sounds import *
 from FindObject import *
+from GetColour import *
 from Queue import *
+from Movements import *
+from Myo import *
 import threading
 import subprocess
 import sys
@@ -64,6 +67,7 @@ def runQueue():
     while True:
         while queue.empty() == False:
             exec queue.get()
+
 
 # compassThread = newThread (updateCompass)
 # commandThread = newThread (updateCommand)

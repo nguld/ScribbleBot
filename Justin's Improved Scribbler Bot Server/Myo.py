@@ -1,6 +1,5 @@
 from __future__ import division
 from myro import *
-import redis
 import subprocess
 import os
 import signal
@@ -15,10 +14,10 @@ def find_between( s, first, last ):
 		return ""
 
 def getMyoData(channel = "scribblerMyoSensors"):
-	return subprocess.Popen(["/home/martvanburen/Desktop/jdk1.8.0_25/bin/java", "-jar", "JavaRedis.jar", "pub-redis-10683.us-east-1-2.5.ec2.garantiadata.com", "10683", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+	return subprocess.Popen(["java", "-jar", "JavaRedis.jar", "pub-redis-10683.us-east-1-2.5.ec2.garantiadata.com", "10683", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE)
 
 def killSubProcess(proc):
-	os.killpg(proc.pid, signal.SIGTERM)
+	os.system("taskkill /F /PID "+str(proc.pid))
 
 def redisPublish(message, channel = "scribblerPhoneCommands"):
 	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBLISH", channel, message], shell=False, stdout=subprocess.PIPE)
@@ -49,9 +48,9 @@ def myoDrive():
 
 	print "Calibration Point: ", myoCalibrationPoint			
 	killSubProcess(a)
-
-	redisPublish('speak("Lets Roll")')
 	
+	redisPublish('speak("Lets Roll")')
+
 	myoCalibrationPoint = find_between(myoCalibrationPoint, '[', ']').split(',')
 	
 	calRoll = int(float(myoCalibrationPoint[0]))

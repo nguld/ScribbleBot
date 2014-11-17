@@ -1,30 +1,31 @@
 from myro import *
 from Sounds import *
 from math import *
+from speakCustom import *
 
 ####################################################
 #                 Define Colours                   #
 ####################################################
+
 black =     makeColor( 20, 20, 20)
 white =     makeColor(235, 235, 235)
-blue =      makeColor( 50, 50, 255)
+blue =      makeColor( 50, 50, 250)
 darkBlue =  makeColor( 20, 20, 100)
-pink =      makeColor(255, 175, 175)
-red =       makeColor(255, 50, 50)
+pink =      makeColor(250, 175, 175)
+red =       makeColor(250, 50, 50)
 darkRed =   makeColor(100, 10, 10)
-green =     makeColor( 50, 255, 50)
+green =     makeColor(50, 250, 50)
 darkGreen = makeColor(20, 100, 20)
 gray =      makeColor(128, 128, 128)
 darkGray =  makeColor( 64, 64, 64)
 lightGray = makeColor(192, 192, 192)
-yellow =    makeColor(255, 255, 50)
-magenta =   makeColor(255, 50, 255)
-cyan =      makeColor( 50, 255, 255)
-purple =    makeColor(127, 50, 255)
+yellow =    makeColor(250, 250, 60)
+magenta =   makeColor(250, 50, 250)
+cyan =      makeColor( 50, 250, 250)
+purple =    makeColor(127, 50, 250)
 orange =    makeColor(225,100, 50)
+
 #####################################################
-
-
 
 #####################################################
 #                Image Processing                   #
@@ -68,29 +69,32 @@ def determineDirection (colour, num):
     #   |   |   |   |   |   |
     #------------------------
 
-
-    for i in range(1, w, 2):
-        for j in range(1, h, 2):
+    numDivisions = 3
+    distanceFromTollerance = 100
+    
+    for i in range(1, w, numDivisions):
+        for j in range(1, h, numDivisions):
             pixel = getPixel(pic, i, j)
             r, g, b = getRGB(pixel)
 
             # FORMULA 1
-            distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
-            #distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
-            if (distanceFrom < 100):
-                setRGB(pixel, (255,255,255))
+            #distanceFrom = sqrt((r - RGBred)*(r - RGBred) + (g - RGBgreen)*(g - RGBgreen) + (b - RGBblue)*(b - RGBblue));
+            distanceFrom = sqrt(pow(abs(r-RGBred),2) + pow(abs(g-RGBgreen),2) + pow(abs(b-RGBblue),2))
+            
+            if (distanceFrom < distanceFromTollerance):
+                #############setRGB(pixel, (255,255,255))
                 for index in range(0,6):
                     if i > (index) * (w/6): #Check if greater then lower
                         if i < (index+1) * (w/6):
                             totalArray[index] += 1
                             break
-            else:
-                setRGB(pixel, (0,0,0))
-            setPixel(pic, i/2, j/2, pixel)
+            ############else:
+                ###########setRGB(pixel, (0,0,0))
+            ########setPixel(pic, i/numDivisions, j/numDivisions, pixel)
 
-    outputFile = "lucyProcessed" + str(num) + ".gif"
+    ########outputFile = "Processed" + str(num) + ".gif"
     #print outputFile
-    #savePicture(pic, outputFile)
+    #######savePicture(pic, outputFile)
     #show(pic)
 
     errorTollerance = 10
@@ -136,11 +140,9 @@ def determineDirection (colour, num):
 
     print "Reached end of function that is supposed to return a value"
 
-#determineDirection(pink,1)
-
 ###############################################################################
 
-colourKey = {'black': makeColor( 20, 20, 20),
+colourKey = {'black': makeColor(20, 20, 20),
             'white': makeColor(255, 255, 255),
             'blue': makeColor( 50, 50, 255),
             'dark blue': makeColor( 20, 20, 100),
@@ -168,7 +170,6 @@ def findColour(key):
     rightMotor = 1
     lastSeenPos = "NONE"
     counter = 0;
-    direction = determineDirection(colour, counter)
     while True:
         counter += 1
         direction = determineDirection(colour, counter)
@@ -214,7 +215,17 @@ def findColour(key):
         #print "UNKNOWN 'direction'"
         motors(leftMotor,rightMotor)
 
-        if (getObstacle("center") >= 1100 and direction != "NONE"):
+        numIter = 10
+        total = 0
+        for i in range(1,numIter+1):
+            total += getObstacle("center")
+
+        total /= numIter
+
+        if (total >= 1100 and direction != "NONE"):
+            motors(0,0)
+            stop()
+            speakCustom("I found " + key)
+            wait(2)
+            marioOutro()
             break
-    stop()
-    marioOutro()

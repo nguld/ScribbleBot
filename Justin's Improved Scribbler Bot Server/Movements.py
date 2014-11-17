@@ -1,21 +1,22 @@
 from __future__ import division
 from myro import *
-import redis
+from speakCustom import *
 import subprocess
 import os
 import signal
 import sys
+import time
+
 
 def getCompassData(channel = "scribblerCompass"):
-	return subprocess.Popen(["/home/martvanburen/Desktop/jdk1.8.0_25/bin/java", "-jar", "JavaRedis.jar", "pub-redis-10592.us-east-1-2.5.ec2.garantiadata.com", "10592", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+	return subprocess.Popen(["java", "-jar", "JavaRedis.jar", "pub-redis-10592.us-east-1-2.5.ec2.garantiadata.com", "10592", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE)
 
 def killSubProcess(proc):
-	os.killpg(proc.pid, signal.SIGTERM)
+	os.system("taskkill /F /PID "+str(proc.pid))
 
 def isPhoneConnected():
-	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBSUB", "NUMSUB", "scribblerPhoneCommands"], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBSUB", "NUMSUB", "scribblerPhoneCommands"], shell=False, stdout=subprocess.PIPE)
 	retval = a.stdout.readline()
-	killSubProcess(a)
 
 	if ('"scribblerPhoneCommands","1"' in retval):
 		return True
@@ -23,19 +24,33 @@ def isPhoneConnected():
 		print retval
 		return False
 
-def seesObstacle(tolerance):
-	if (tolerance == "high"):
-		tolerance = 100
+def seesObstacle():
+	setIRPower = 130
+	numIter = 10
+	total = 0
+	for i in range(1,numIter+1):
+		total += getObstacle("center")
+
+	total /= numIter
+
+	if (total >= 1100):
+		speakCustom("Houston we have a problem!")
+		return True
 	else:
-		tolerance = 1000
+		return False
+		print total
 
-	return getObstacle("left") >= tolerance or getObstacle("center") >= tolerance or getObstacle("right") >= tolerance
+	# if (tolerance == "high"):
+	# 	tolerance = 100
+	# else:
+	# 	tolerance = 1000
 
-def moveStraight(time = 3):
-	maxTime = time
-	startTime = time.time()
-	move(-1, 0)
-	while (seesObstacle("low") == False and time.time()-startTime < maxTime):
+	# return getObstacle("left") >= tolerance or getObstacle("center") >= tolerance or getObstacle("right") >= tolerance
+
+def moveStraight(maxTime = 3, direction = 1):
+	startTime = time.clock()
+	move(direction*0.7, 0)
+	while (seesObstacle() == False and time.clock()-startTime < maxTime):
 		pass
 	stop()
 

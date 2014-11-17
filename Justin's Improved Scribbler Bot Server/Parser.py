@@ -1,5 +1,6 @@
 import random
 import re
+from speakCustom import *
 
 def contains(inputText, val):
 	return val.lower() in inputText.lower();
@@ -35,7 +36,7 @@ def parse(inputText):
 	shouldSpeak = False
 	colors = ["blue", "red", "dark red", "green", "dark green", "yellow", "magenta", "cyan", "purple", "orange"]
 	jokesArray = ["You make my software turn into hardware", "Are you sitting on the F5 key? because your ass is refreshing.", "You had me at Hello World", "Want to see my HARD Disk? I promise it isn't 3.5 inches and it ain't floppy", "I hope you're an I S O file, because I'd like to mount you."]
-	name = "romeo"
+	name = "Buddy"
 
 	inputNumbers = re.findall('\d+', inputText)
 
@@ -75,6 +76,13 @@ def parse(inputText):
 		function = "moveStraight"
 		if (len(inputNumbers) > 0):
 			arguments.append(int(inputNumbers[0]))
+	elif (containsAll(inputText, ["move", "backward"])):
+		function = "moveStraight"
+		if (len(inputNumbers) > 0):
+			arguments.append(int(inputNumbers[0]))
+		else:
+			arguments.append(3)
+		arguments.append(-1)
 	elif (containsAll(inputText, ["turn", "right"])):
 		function = "turnRightByDegrees"
 		if (len(inputNumbers) > 0):
@@ -129,7 +137,7 @@ def parse(inputText):
 	elif (containsAll(inputText, [name, "no", "you"])):
 		function = "speakCustom"
 		arguments.append("no you")
-	elif (containsAll(inputText, [name, "I", "sad", "am"])):
+	elif (containsAll(inputText, [name, "I", "sad"])):
 		function = "speakCustom"
 		arguments.append("don't bring me down.......... just kidding. I love you")
 	elif (containsAll(inputText, [name, "set", "up"])):
@@ -145,6 +153,7 @@ def parse(inputText):
 		if shouldSpeak:
 			command = 'speakCustom('+command.rstrip()+')'
 	else:
-		command = 'speakCustom("'+inputText.rstrip()+'")'
+		command = ""
+		speakCustom(inputText.rstrip())
 
 	return command
