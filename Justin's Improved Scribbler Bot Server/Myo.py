@@ -20,6 +20,9 @@ def getMyoData(channel = "scribblerMyoSensors"):
 def killSubProcess(proc):
 	os.killpg(proc.pid, signal.SIGTERM)
 
+def redisPublish(message, channel = "scribblerPhoneCommands"):
+	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBLISH", channel, message], shell=False, stdout=subprocess.PIPE)
+
 def minimalDifference(a, b):
 	dif = a - b
 	dif2 = (a+18) - b
@@ -46,6 +49,8 @@ def myoDrive():
 
 	print "Calibration Point: ", myoCalibrationPoint			
 	killSubProcess(a)
+
+	redisPublish('speak("Lets Roll")')
 	
 	myoCalibrationPoint = find_between(myoCalibrationPoint, '[', ']').split(',')
 	
