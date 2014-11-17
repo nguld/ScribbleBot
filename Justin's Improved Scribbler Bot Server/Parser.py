@@ -1,4 +1,5 @@
 import random
+import re
 
 def contains(inputText, val):
 	return val.lower() in inputText.lower();
@@ -32,10 +33,11 @@ def parse(inputText):
 	function = ""
 	arguments = []
 	shouldSpeak = False
-	colors = ["black", "white", "blue", "dark blue", "pink", "red", "dark red", "green", "dark green", "gray", "dark gray", "light gray", "yellow", "magenta", "cyan", "purple", "orange"]
+	colors = ["blue", "red", "dark red", "green", "dark green", "yellow", "magenta", "cyan", "purple", "orange"]
 	jokesArray = ["You make my software turn into hardware", "Are you sitting on the F5 key? because your ass is refreshing.", "You had me at Hello World", "Want to see my HARD Disk? I promise it isn't 3.5 inches and it ain't floppy", "I hope you're an I S O file, because I'd like to mount you."]
 	name = "romeo"
 
+	inputNumbers = re.findall('\d+', inputText)
 
 	if (containsAll(inputText, ["round", "box"])):
 		function = "aroundBox";
@@ -43,20 +45,62 @@ def parse(inputText):
 			arguments.append(1)
 			arguments.append(1)
 		shouldSpeak = True
+	
 	elif (containsOne(inputText, ["stop", "halt", "cancel"]) and containsOne(inputText, ["current"])):
 		function = "stopCurrent"
 	elif (containsOne(inputText, ["stop", "halt", "cancel"])):
 		function = "stopAll"
+	
 	elif (containsOne(inputText, ["find", "look for", "follow", "go to"]) and containsOne(inputText, colors)):
 		function = "findColour"
 		arguments.append(elementInInput(inputText, colors))
+	elif (containsOne(inputText, ["find", "look for", "follow", "go to"]) and len(inputNumbers) > 0 and containsOne(inputText, ["colour", "color"])):
+		function = "rememberColours"
+		arguments.append(int(inputNumbers[0]))
+	
 	elif (containsAll(inputText, ["play", "mario"])):
 		if (contains(inputText, "outro")):
 			function = "marioOutro"
 		else:
 			function = "marioIntro"
 			shouldSpeak = True
+	elif (containsAll(inputText, ["play", "nyan", "cat"])):
+		function = "nyanCat"
+	elif (containsAll(inputText, ["play", "star", "wars"])):
+		function = "starWars"
+	elif (containsAll(inputText, ["play", "sand", "storm"])):
+		function = "darude"
+	
+	elif (containsAll(inputText, ["move", "forward"])):
+		function = "moveStraight"
+		if (len(inputNumbers) > 0):
+			arguments.append(int(inputNumbers[0]))
+	elif (containsAll(inputText, ["turn", "right"])):
+		function = "turnRightByDegrees"
+		if (len(inputNumbers) > 0):
+			arguments.append(int(inputNumbers[0]))
+	elif (containsAll(inputText, ["turn", "left"])):
+		function = "turnLeftByDegrees"
+		if (len(inputNumbers) > 0):
+			arguments.append(int(inputNumbers[0]))
+	elif ((containsOne(inputText, ["turn", "point"]) and containsOne(inputText, ["at", "to"])) or
+		(contains(inputText, "point") and containsOne(inputText, ["north", "south", "east", "west"]))):
+		function = "turnToDegrees"
+		if (contains(inputText, "north")):
+			arguments.append(0)
+		elif (contains(inputText, "south")):
+			arguments.append(180)
+		elif (contains(inputText, "west")):
+			arguments.append(90)
+		elif (contains(inputText, "east")):
+			arguments.append(270)
+		elif (len(inputNumbers) > 0):
+			arguments.append(int(inputNumbers[0]))
+	elif (containsOne(inputText, ["mimic", "copy", "follow"]) and contains(inputText, "compass")):
+		function = "followCompass"
 
+	elif (containsOne(inputText, ["drive", "race"])):
+		function = "myoDrive"
 
 	elif (containsAll(inputText, ["What", "your", "name"])):
 		function = "speakCustom"
