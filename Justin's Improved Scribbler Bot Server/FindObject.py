@@ -186,10 +186,10 @@ def findColour(key):
         if (direction=="LEFTCENTER"):
             lastSeenPos = "LEFT"
             rightMotor = .7
-            leftMotor  = .6
+            leftMotor  = .65
         if (direction=="RIGHTCENTER"):
             lastSeenPos = "RIGHT"
-            rightMotor = .6
+            rightMotor = .65
             leftMotor  = .7
         if (direction=="MIDRIGHT"):
             lastSeenPos = "RIGHT"

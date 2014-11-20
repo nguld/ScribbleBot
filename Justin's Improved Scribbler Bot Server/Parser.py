@@ -1,5 +1,6 @@
 import random
 import re
+from Weather import *
 from speakCustom import *
 
 def contains(inputText, val):
@@ -41,7 +42,8 @@ def parse(inputText):
 	arguments = []
 	shouldSpeak = False
 	colors = ["blue", "red", "dark red", "green", "dark green", "yellow", "magenta", "cyan", "purple", "orange"]
-	jokesArray = ["You make my software turn into hardware.", "Are you sitting on the F5 key? because your ass is refreshing.", "You had me at Hello World.", "Want to see my HARD Disk? I promise it isn't 3.5 inches and it ain't floppy.", "I hope you're an I S O file, because I'd like to mount you."]
+	pickUpLines = ["You make my software turn into hardware.", "Are you sitting on the F5 key? because your ass is refreshing.", "Want to see my HARD Disk? I promise it isn't 3.5 inches and it ain't floppy.", "I hope you're an I S O file, because I'd like to mount you."]
+	jokesArray = ["You had me at Hello World.", "Failure is not an option. It comes bundled with your Scribbler Bot.", "There are only 10 types of people in the world: those that understand binary and those that don't.", "To err is human, and to blame it on a computer is even more so.", "CAPS LOCK, Preventing Login Since 1980", "If at first you don't succeed; call it version 1.0.", "My software never has bugs. It just develops random features", "If brute force doesn't solve your problems, then you aren't using enough.", "Latest survey shows that 3 out of 4 people make up 75 percent of the world's population."]
 	comeAgainArray = ["come again?", "Sorry, I didn't quite catch that.", "I beg your pardon.", "What was that?"]
 	modestComebacks = ["Thanks, I try my best.", "You're too nice.", "Right back atcha.", "Thanks"]
 	helloArray = ["hello", "hi", "what's up", "sup", "yo"]
@@ -124,6 +126,9 @@ def parse(inputText):
 	elif (containsAll(inputText, [name, "tell", "joke"])):
 		function = "speakCustom"
 		arguments.append(random.choice(jokesArray))
+	elif (containsAll(inputText, [name, "pick", "up", "line"])):
+		function = "speakCustom"
+		arguments.append(random.choice(pickUpLines))
 	elif (containsAll(inputText, [name, "homework"])):
 		function = "speakCustom"
 		arguments.append("do I look like Wolfram Alpha")
@@ -136,21 +141,27 @@ def parse(inputText):
 	elif (containsAll(inputText, [name, "boy", "girl"])):
 		function = "speakCustom"
 		arguments.append("I'm just happy to see you. Nudge nudge wink wink")
-	elif (containsAll(inputText, [name, "your", "best"])):
-		function = "speakCustom"
-		arguments.append("no you")
 	elif (containsAll(inputText, [name, "I", "sad"])):
 		function = "speakCustom"
 		arguments.append("don't bring me down.......... just kidding. I love you")
-	elif (containsAll(inputText, [name, "set", "up"])):
-		function = "speakCustom"
-		arguments.append("Hey ladies, are you on or below the crazy hot line?")
 	elif (containsOne(inputText, ["best", "awesome", "good job", "nice"])):
 		function = "speakCustom"
 		arguments.append(random.choice(modestComebacks))
 	elif (containsOne(inputText, ["hello", "hi"])):
 		function = "speakCustom"
 		arguments.append(random.choice(helloArray))
+	elif (containsOne(inputText, ["temperature"])):
+		function = "speakCustom"
+		arguments.append(WhatIsTheTemperature())
+	elif (containsOne(inputText, ["weather"])):
+		function = "speakCustom"
+		arguments.append(WhatIsTheWeather())
+	elif (containsOne(inputText, ["umbrilla"])):
+		function = "speakCustom"
+		arguments.append(DoINeedAnUmbrella())
+	elif (containsOne(inputText, ["shorts"])):
+		function = "speakCustom"
+		arguments.append(ShouldIWearShorts())
 	
 	for i in range(0, len(arguments)):
 		if isinstance(arguments[i], basestring):
