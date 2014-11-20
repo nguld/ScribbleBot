@@ -23,7 +23,7 @@ yellow =    makeColor(255, 255, 0)
 magenta =   makeColor(255, 0, 255)
 # cyan =      makeColor( 0, 255, 255)
 # purple =    makeColor(127, 0, 255)
-orange =    makeColor(225,100, 0)
+# orange =    makeColor(225,100, 0)
 # brown = 	makeColor(102, 51, 0)
 
 
@@ -67,8 +67,8 @@ def seeColor ():#this takes a picture, finds average RGB code
 	return avgR, avgG, avgB
 	
 def determineColor ():#this takes a color from a picture and gives it a name
-	listColors = [blue, red, darkRed, darkGreen, yellow, magenta, orange]
-	dictColors = {blue: 'blue', red: 'red', darkRed: 'dark red', darkGreen: 'dark green', yellow: 'yellow',magenta: 'magenta', orange: 'orange'}
+	listColors = [blue, red, darkRed, darkGreen, yellow, magenta]
+	dictColors = {blue: 'blue', red: 'red', darkRed: 'dark red', darkGreen: 'dark green', yellow: 'yellow',magenta: 'magenta'}
 	
 	color = makeColor(seeColor())
 	listDifference = []

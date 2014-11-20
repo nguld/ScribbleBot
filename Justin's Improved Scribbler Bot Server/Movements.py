@@ -1,20 +1,22 @@
 from __future__ import division
 from myro import *
+from speakCustom import *
 import subprocess
 import os
 import signal
 import sys
+import time
+
 
 def getCompassData(channel = "scribblerCompass"):
-	return subprocess.Popen(["/home/martvanburen/Desktop/jdk1.8.0_25/bin/java", "-jar", "JavaRedis.jar", "pub-redis-10592.us-east-1-2.5.ec2.garantiadata.com", "10592", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+	return subprocess.Popen(["java", "-jar", "JavaRedis.jar", "pub-redis-10592.us-east-1-2.5.ec2.garantiadata.com", "10592", "GiJiJuKaMaNoRo", channel], shell=False, stdout=subprocess.PIPE)
 
 def killSubProcess(proc):
-	os.killpg(proc.pid, signal.SIGTERM)
+	os.system("taskkill /F /PID "+str(proc.pid))
 
 def isPhoneConnected():
-	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBSUB", "NUMSUB", "scribblerPhoneCommands"], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
+	a = subprocess.Popen(["redis-cli", "--csv", "-h", "pub-redis-16825.us-east-1-2.5.ec2.garantiadata.com", "-p", "16825", "-a", "GiJiJuKaMaNoRo", "PUBSUB", "NUMSUB", "scribblerPhoneCommands"], shell=False, stdout=subprocess.PIPE)
 	retval = a.stdout.readline()
-	killSubProcess(a)
 
 	if ('"scribblerPhoneCommands","1"' in retval):
 		return True
@@ -22,18 +24,33 @@ def isPhoneConnected():
 		print retval
 		return False
 
-def seesObstacle(tolerance):
-	if (tolerance == "high"):
-		tolerance = 100
+def seesObstacle():
+	setIRPower = 130
+	numIter = 10
+	total = 0
+	for i in range(1,numIter+1):
+		total += getObstacle("center")
+
+	total /= numIter
+
+	if (total >= 1100):
+		speakCustom("Houston we have a problem!")
+		return True
 	else:
-		tolerance = 1000
+		return False
+		print total
 
-	return getObstacle("left") >= tolerance or getObstacle("center") >= tolerance or getObstacle("right") >= tolerance
+	# if (tolerance == "high"):
+	# 	tolerance = 100
+	# else:
+	# 	tolerance = 1000
 
-def moveStraight(maxTime = 3):
-	startTime = time.time()
-	move(-1, 0)
-	while (seesObstacle("low") == False and time.time()-startTime < maxTime):
+	# return getObstacle("left") >= tolerance or getObstacle("center") >= tolerance or getObstacle("right") >= tolerance
+
+def moveStraight(maxTime = 3, direction = 1):
+	startTime = time.clock()
+	move(direction*0.7, 0)
+	while ((direction == -1 or seesObstacle() == False) and time.clock()-startTime < maxTime):
 		pass
 	stop()
 
@@ -249,113 +266,3 @@ def followCompass():
 	killSubProcess(a)
 
 	stop()
-
-def drawSquare(sideLength = 2):
-	moveStraight(sideLength)
-	turnRightByDegrees()
-	moveStraight(sideLength)
-	turnRightByDegrees()
-	moveStraight(sideLength)
-	turnRightByDegrees()
-	moveStraight(sideLength)
-	turnRightByDegrees()
-
-def drawCircle():
-	if (not isPhoneConnected()):
-		print "No phone connected"
-		return
-	
-	a = getCompassData()
-
-	initialCompass = -1
-	finalCompass = -1
-	difference = -1
-
-	while (True):
-		phoneCompass = int(float(a.stdout.readline()))
-		if (phoneCompass != ""):
-			initialCompass = phoneCompass
-			difference = phoneCompass - finalCompass
-			difference2 = (phoneCompass+360) - finalCompass
-			difference3 = (phoneCompass-360) - finalCompass
-			if (abs(difference2) < abs(difference)): difference = difference2
-			if (abs(difference3) < abs(difference)): difference = difference3
-			break
-
-	print "Starts At: ", initialCompass
-	finalCompass = initialCompass
-	killSubProcess(a)
-
-	maxTime = 3
-	startTime = time.time()
-	move(0.5, -0.5)
-	while (seesObstacle("low") == False and time.time()-startTime < maxTime):
-		pass
-
-	if (seesObstacle("low")):
-		print "Obstacle!"
-		return
-
-	a = getCompassData()
-
-	iteration = 0
-	while (True):
-		phoneCompass = int(float(a.stdout.readline()))
-		if (phoneCompass != ""):
-			print "Current: ", phoneCompass
-
-			difference = phoneCompass - finalCompass
-			difference2 = (phoneCompass+360) - finalCompass
-			difference3 = (phoneCompass-360) - finalCompass
-			if (abs(difference2) < abs(difference)): difference = difference2
-			if (abs(difference3) < abs(difference)): difference = difference3
-
-			print "Difference: ", difference
-			
-			if (abs(difference) == 0):
-				break
-			elif (difference < 0):
-				move(0.5, -0.5)
-			else:
-				move(-0.5, -0.5)
-
-			if iteration > 100:
-				break
-			iteration += 1
-
-	killSubProcess(a)
-
-	stop()
-
-#def turnByDegrees(degrees, speed, direction = 1):
-#	if not isPhoneConnected():
-#		if direction == 1:
-#			turnLeftByDegreesFallback(degrees)
-#		else:
-#			turnRightByDegreesFallback(degrees)
-#		return
-#	
-#	move(0,direction*speed)
-#
-#	a = subprocess.Popen(["/home/martvanburen/Desktop/jdk1.8.0_25/bin/java", "-jar", "Movement Commands/JavaRedis.jar", "pub-redis-10592.us-east-1-2.5.ec2.garantiadata.com", "10592", "GiJiJuKaMaNoRo", "scribblerCompass"], shell=False, stdout=subprocess.PIPE, preexec_fn=os.setsid)
-#
-#	iteration = 0
-#	initialCompass = -1
-#	while (True):
-#		phoneCompass = int(float(a.stdout.readline()))
-#		if (phoneCompass != ""):
-#			if (iteration == 0):
-#				initialCompass = phoneCompass
-#
-#			upperBound = (initialCompass+(degrees+5))
-#			lowerBound = (initialCompass+(degrees-10))
-#			print "Lower: ", lowerBound
-#			print "Upper: ", upperBound
-#			print "Current: ", phoneCompass
-#			if ((phoneCompass > lowerBound and phoneCompass < upperBound) or
-#				(phoneCompass+360 > lowerBound and phoneCompass+360 < upperBound)):
-#				stop()
-#				break
-#			iteration += 1
-#	
-#	os.killpg(a.pid, signal.SIGTERM)

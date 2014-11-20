@@ -31,11 +31,15 @@ def minimalDifference(a, b):
 	return dif
 
 def myoDrive():
+	prepStatements = ["Prepping engines", "Tuning motors", "warming up", "I'm waiting"]
+
+	redisPublish('speak("'+random.choice(prepStatements)+'")')
 	a = getMyoData()
 	b = getMyoData("scribblerMyoPoses")
 
 	myoCalibrationPoint = ""
 
+	iteration = 0
 	while (True):
 		myoPose = b.stdout.readline()
 		myoSensor = a.stdout.readline()
@@ -45,6 +49,10 @@ def myoDrive():
 				break
 			else:
 				print "Nope: ", myoPose
+				if (iteration%2 == 0):
+					redisPublish('speak("'+random.choice(prepStatements)+'")')
+
+			iteration += 1
 
 	print "Calibration Point: ", myoCalibrationPoint			
 	killSubProcess(a)
@@ -69,7 +77,7 @@ def myoDrive():
 			curYaw = int(float(myoSensor[2]))
 
 			difRoll = minimalDifference(curRoll, calRoll)
-			difPitch = minimalDifference(curPitch, calPitch)
+			difPitch = curPitch - calPitch
 			difYaw = minimalDifference(curYaw, calYaw)
 
 			print "difRoll: ", difRoll
@@ -86,3 +94,4 @@ def myoDrive():
 			iteration += 1
 	
 	stop()
+	redisPublish('speak("That was fun")')
