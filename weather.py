@@ -2,9 +2,12 @@ import urllib
 import json
 import re
 
-f = urllib.urlopen("http://api.wunderground.com/api/698b8e12c86cc092/conditions/q/Canada/Kitchener-Waterloo_Regional.json")
-json_string = f.read()
-parsed_json = json.loads(json_string)
+#f = urllib.urlopen("http://api.wunderground.com/api/698b8e12c86cc092/conditions/q/Canada/Kitchener-Waterloo_Regional.json")
+#json_string = f.read()
+#parsed_json = json.loads(json_string)
+parsed = open('weather.json')
+parsed_json = json.load(parsed)
+
 
 def WhatIsTheTemperature():
 	temp_c = parsed_json['current_observation']['temp_c']
@@ -50,4 +53,4 @@ def ShouldIWearShorts():
 	return str
 	
 
-f.close()
+#f.close()
