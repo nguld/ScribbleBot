@@ -7,7 +7,7 @@ $(document).ready(function() {
 		clearTimeout(delayTimer);
 		delayTimer = setTimeout(function() {
 			$("input").val("");
-			$.post("parse.php", { input: inputText }).done(function(data) {
+			$.post("parse.php"+window.location.search, { input: inputText }).done(function(data) {
 				if (data != "") {
 					alert(data);
 				}

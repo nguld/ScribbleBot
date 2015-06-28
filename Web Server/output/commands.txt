@@ -1,0 +1,2 @@
+speak("hello")
+speak("hi")
